@@ -7,6 +7,8 @@ import "./assets/styles/index.css";
 import "./assets/styles/bootstrap.custom.css";
 import HomeScreen from './Screens/HomeScreen';
 import ProductScreen from './Screens/ProductScreen';
+import store from './store';
+import {Provider} from "react-redux";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -20,7 +22,9 @@ const router = createBrowserRouter(
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-      <RouterProvider router={router} />
+    <Provider store={store}>
+       <RouterProvider router={router} />
+    </Provider>
   </React.StrictMode>
 );
 

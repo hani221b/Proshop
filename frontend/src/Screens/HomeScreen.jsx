@@ -1,24 +1,18 @@
 import React from 'react'
 import { Row, Col } from 'react-bootstrap';
-import { useEffect, useState } from 'react';
 import Product from "../components/Product";
-import axios from "axios";
+import { useGetProductsQuery } from '../slices/productsApiSlice.js';
+import Loader from '../components/Loader.jsx';
+import Message from '../components/Message.jsx';
 
 const HomeScreen = () => {
 
-  const [products, setProducts] = useState(null);
-
-  useEffect(() => {
-    const fetchProducts = async () => {
-      const { data } = await axios.get("http://localhost:5000/api/products");
-      setProducts(data);
-    }
-
-    fetchProducts();
-  }, []);
-
+  const {data: products, isLoading, error} = useGetProductsQuery();
   return (
     <>
+    {isLoading ? (<Loader />) :
+     error ? (<Message variant="danger">{error?.data?.message ||  error.error}</Message>) : (
+      <>
         <h1>Latest products</h1>
         <Row>
             {products ? products.map((product) => (
@@ -27,6 +21,9 @@ const HomeScreen = () => {
                 </Col>
             )) : []} 
         </Row>
+      </>
+    )}
+
     </>
   )
 }

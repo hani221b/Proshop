@@ -1,4 +1,4 @@
-import asyncHandler from "../middleware/asyncHanlder";
+import asyncHandler from "../middleware/asyncHanlder.js";
 import Product from "../models/ProductModel.js";
 
 // @desc    Fetch all products
