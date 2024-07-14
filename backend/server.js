@@ -31,6 +31,9 @@ app.use(bodyParser.urlencoded({extended: true}));
 app.use("/api/products", productsRoutes);
 app.use("/api/users", usersRoutes);
 app.use("/api/orders", orderRoutes);
+app.get("/api/config/paypal", (req, res) => {
+  res.send({clientId: process.env.PAYPAL_CLIENT_ID});
+})
 
 app.use(notFound);
 app.use(errorHandler);
