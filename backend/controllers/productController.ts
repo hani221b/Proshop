@@ -1,10 +1,11 @@
-import asyncHandler from "../middleware/asyncHanlder.js";
-import Product from "../models/ProductModel.js";
-
+import { Request, Response } from "express";
+import asyncHandler from "../middleware/asyncHanlder.ts";
+import Product from "../models/ProductModel.ts";
+ 
 // @desc    Fetch all products
 // @route   Get /api/products
 // @access  Public
-const getProducts = asyncHandler(async (req, res) => {
+const getProducts = asyncHandler(async (_: Request, res: Response) => {
     const products = await Product.find({});
     res.json(products);
 });
@@ -12,7 +13,7 @@ const getProducts = asyncHandler(async (req, res) => {
 // @desc    Fetch a product
 // @route   Get /api/products/:id
 // @access  Public
-const getProductById = asyncHandler(async (req, res) => {
+const getProductById = asyncHandler(async (req: Request, res: Response) => {
     const product = await Product.findById(req.params.id);
     if(product){
          res.json(product);

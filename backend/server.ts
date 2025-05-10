@@ -1,15 +1,16 @@
 import express from "express";
 import dotenv from "dotenv";
 dotenv.config();
-import connectDB from "./config/db.js";
-import productsRoutes from "./routes/productsRoutes.js";
-import usersRoutes from "./routes/userRoutes.js";
-import orderRoutes from "./routes/orderRoutes.js";
-import { notFound, errorHandler } from "./middleware/errorMiddleware.js";
-const port = process.env.PORT || 5000;
+import connectDB from "./config/db.ts";
+import productsRoutes from "./routes/productsRoutes.ts";
+import usersRoutes from "./routes/userRoutes.ts";
+import orderRoutes from "./routes/orderRoutes.ts";
+import { notFound, errorHandler } from "./middleware/errorMiddleware.ts";
 import bodyParser from "body-parser";
 import cookieParser from "cookie-parser";
 import cors from "cors";
+
+const port = process.env.PORT || 5000;
 
 connectDB();
 const app = express();

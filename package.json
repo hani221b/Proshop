@@ -1,10 +1,10 @@
 {
   "name": "proshop",
   "version": "1.0.0",
-  "main": "server.js",
-  "type": "module",
+  "main": "backend/dist/srever.js",
+  "type": "commonjs",
   "scripts": {
-    "start": "node backend/server.js",
+    "start": "nodemon --exec ts-node backend/server.ts",
     "server": "nodemon backend/server.js",
     "client": "npm start --prefix frontend",
     "dev": "concurrently \"npm run server\" \"npm run client\"",
@@ -25,8 +25,17 @@
     "mongoose": "^8.4.4"
   },
   "devDependencies": {
+    "@types/bcryptjs": "^2.4.6",
+    "@types/body-parser": "^1.19.5",
+    "@types/cookie-parser": "^1.4.8",
+    "@types/cors": "^2.8.18",
+    "@types/express": "^5.0.1",
+    "@types/jsonwebtoken": "^9.0.9",
+    "@types/node": "^22.15.17",
     "concurrently": "^8.2.2",
     "dotenv": "^16.4.5",
-    "nodemon": "^3.1.4"
+    "nodemon": "^3.1.10",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.8.3"
   }
 }

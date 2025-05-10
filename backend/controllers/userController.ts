@@ -1,7 +1,7 @@
-import asyncHandler from "../middleware/asyncHanlder.js";
-import User from "../models/UserModel.js";
+import asyncHandler from "../middleware/asyncHanlder.ts";
+import User from "../models/UserModel.ts";
 import jwt from "jsonwebtoken";
-import generateToken from "../utils/generateToken.js";
+import generateToken from "../utils/generateToken.ts";
 
 // @desc    Auth user & get token
 // @route   POST /api/users/login
@@ -10,7 +10,7 @@ const authUser = asyncHandler(async (req, res) => {
     const {email, password} = req.body;
     const user = await User.findOne({ email });
     if(user && (await user.matchPassword(password))){
-        generateToken(res, user._id);
+        generateToken(res, user._id as string);
         res.json({
             _id: user._id,
             name: user.name,
@@ -37,7 +37,7 @@ const registerUser = asyncHandler(async (req, res) => {
         name, email, password
     });
     if(user){
-        generateToken(res, user._id);
+        generateToken(res, user._id as string);
         res.status(201).json({
             _id: user._id,
             name: user.name,
@@ -66,7 +66,7 @@ const logoutUser = asyncHandler(async (req, res) => {
 // @route   Get /api/users/profile
 // @access  Private
 const getUserProfile = asyncHandler(async (req, res) => {
-    const user = await User.findById(req.user._id);
+    const user = await User.findById(req.user!._id);
     if(user) {
         res.status(200).json({
             _id: user._id,
@@ -84,7 +84,7 @@ const getUserProfile = asyncHandler(async (req, res) => {
 // @route   Get /api/users/profile
 // @access  Private
 const updateUserProfile = asyncHandler(async (req, res) => {
-    const user = await User.findById(req.user._id);
+    const user = await User.findById(req.user!._id);
     if(user) {
         user.name = req.body.name || user.name;
         user.email = req.body.email || user.email;

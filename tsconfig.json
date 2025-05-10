@@ -1,0 +1,20 @@
+{
+  "compilerOptions": {
+    "module": "ESNext", 
+    "moduleResolution": "Node", 
+    "target": "ESNext", 
+    "esModuleInterop": true, 
+    "skipLibCheck": true, 
+    "allowImportingTsExtensions": true,
+    "forceConsistentCasingInFileNames": true,
+    "outDir": "./backend/dist", 
+    "baseUrl": ".", 
+    "paths": {
+      "@/*": ["backend/*"]
+    },
+    "resolveJsonModule": true,
+    "allowSyntheticDefaultImports": true
+  },
+  "include": ["backend/**/*.ts"], 
+  "exclude": ["node_modules"]
+}
