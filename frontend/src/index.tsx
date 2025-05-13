@@ -7,7 +7,7 @@ import "./assets/styles/index.css";
 import "./assets/styles/bootstrap.custom.css";
 import HomeScreen from './Screens/HomeScreen';
 import ProductScreen from './Screens/ProductScreen';
-import store from './store';
+import store from './store.ts';
 import {Provider} from "react-redux";
 import CartScreen from './Screens/CartScreen';
 import LoginScreen from './Screens/LoginScreen';
@@ -40,11 +40,11 @@ const router = createBrowserRouter(
   )
 );
 
-const root = ReactDOM.createRoot(document.getElementById('root'));
+const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement);
 root.render(
   <React.StrictMode>
     <Provider store={store}>
-      <PayPalScriptProvider deferLoading={true}>
+      <PayPalScriptProvider options={{clientId: ""}} deferLoading={true}>
         <RouterProvider router={router} />
       </PayPalScriptProvider>
     </Provider>
@@ -54,4 +54,4 @@ root.render(
 // If you want to start measuring performance in your app, pass a function
 // to log results (for example: reportWebVitals(console.log))
 // or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
-reportWebVitals();
+reportWebVitals("");

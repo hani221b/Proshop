@@ -1,5 +1,5 @@
-import {USERS_URL} from "../constants.js";
-import { apiSlice } from "./apiSlice.js";
+import {USERS_URL} from "../constants.ts";
+import { apiSlice } from "./apiSlice.ts";
 
 export const usersApiSlice = apiSlice.injectEndpoints({
     endpoints: (builder) => ({
@@ -9,7 +9,7 @@ export const usersApiSlice = apiSlice.injectEndpoints({
                 method: "POST",
                 body: data,
             }),
-            keepUnusedDataFor: 5
+            // keepUnusedDataFor: 5
         }),
         register: builder.mutation({
             query: (data) => ({

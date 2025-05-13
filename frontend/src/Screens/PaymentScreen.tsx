@@ -6,13 +6,14 @@ import { Form, Button, Col } from 'react-bootstrap';
 import FormContainer from '../components/FormContainer';
 import CheckoutSteps from '../components/CheckoutSteps';
 import { savePaymentMethod } from '../slices/cartSlice';
+import { RootState } from '@reduxjs/toolkit/query';
 
 const PaymentScreen = () => {
     const [paymentMethod, setPaymentMethod] = useState("PayPal"); 
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
-    const cart = useSelector(state => state.cart);
+    const cart = useSelector((state: any) => state.cart);
     const { shippingAddress } = cart;
 
     useEffect(() => {
@@ -21,7 +22,7 @@ const PaymentScreen = () => {
         }
     }, [shippingAddress, navigate]);
 
-    const submitHandler = (e) => {
+    const submitHandler = (e: any) => {
         e.preventDefault();
         dispatch(savePaymentMethod(paymentMethod));
         navigate("/place-order")

@@ -7,8 +7,9 @@ import { useNavigate } from 'react-router-dom';
 import { saveShippingAddress } from '../slices/cartSlice';
 import CheckoutSteps from '../components/CheckoutSteps';
 
+
 const ShippingScreen = () => {
-    const cart  = useSelector(state => state.cart);
+    const cart  = useSelector((state: any) => state.cart);
     const { shippingAddress } = cart;
     console.log(shippingAddress);
     const [address, setAddress] = useState(shippingAddress?.address || "");
@@ -19,7 +20,7 @@ const ShippingScreen = () => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
 
-    const submitHandler = (e) => {
+    const submitHandler = (e: any) => {
         e.preventDefault();
         dispatch(saveShippingAddress({address, city, postalCode, country}));
         navigate("/payment");

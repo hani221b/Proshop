@@ -1,7 +1,7 @@
 import { configureStore } from "@reduxjs/toolkit";
-import { apiSlice } from "./slices/apiSlice.js";
-import cartSliceReducer from "./slices/cartSlice.js";
-import authSliceReducer from "./slices/authSlice.js";
+import { apiSlice } from "./slices/apiSlice.ts";
+import cartSliceReducer from "./slices/cartSlice.ts";
+import authSliceReducer from "./slices/authSlice.ts";
 
 const store = configureStore({
     reducer: {
@@ -14,4 +14,6 @@ const store = configureStore({
     devTools: true
 });
 
+export type RootState = ReturnType<typeof store.getState>;
+export type AppDispatch = typeof store.dispatch;
 export default store;

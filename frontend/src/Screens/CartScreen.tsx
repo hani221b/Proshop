@@ -5,18 +5,20 @@ import {FaTrash} from "react-icons/fa";
 import Message from "../components/Message";
 import {useDispatch, useSelector} from "react-redux";
 import { addToCart, removeFromCart } from '../slices/cartSlice';
+import { RootState } from '@reduxjs/toolkit/query';
+import { CartItem } from '../@types/cart';
 
 const CartScreen = () => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
 
-    const cart = useSelector(state => state.cart);
+    const cart = useSelector((state: any) => state.cart);
     const {cartItems} = cart;
 
-    const addToCartHandler = async (product, qty) => {
+    const addToCartHandler = async (product: CartItem, qty: number) => {
         dispatch(addToCart({...product, qty}))
     }
-    const removeFromCartHandler = async (id) => {
+    const removeFromCartHandler = async (id: string)     => {
         console.log(id);
         dispatch(removeFromCart(id))
     }
@@ -35,7 +37,7 @@ const CartScreen = () => {
                 ) :
                  (
                     <ListGroup variant='flush'>
-                        {cartItems.map((item) => (
+                        {cartItems.map((item: CartItem) => (
                             <ListGroup.Item key={item._id}>
                                 <Row>
                                     <Col md={2}>
@@ -60,8 +62,8 @@ const CartScreen = () => {
                                         </Form.Control>
                                     </Col>
                                     <Col md={2}>
-                                       <Button type='b utton' variant='light'
-                                            onClick={() => removeFromCartHandler(item._id)}>
+                                       <Button type='button' variant='light'
+                                            onClick={() => removeFromCartHandler(item._id as string)}>
                                             <FaTrash color='red' />
                                        </Button>
                                     </Col>
@@ -76,8 +78,8 @@ const CartScreen = () => {
             <Card>
                 <ListGroup variant='flush'>
                     <ListGroup.Item>
-                        <h2>Subtotal ({ cartItems.reduce((acc, item) => acc + item.qty, 0) }) Items</h2>
-                        $ {cartItems.reduce((acc, item) => acc + item.qty * item.price, 0).toFixed(2)}
+                        <h2>Subtotal ({ cartItems.reduce((acc: any, item: CartItem) => acc + item.qty, 0) }) Items</h2>
+                        $ {cartItems.reduce((acc: any, item: CartItem) => acc + item.qty * item.price, 0).toFixed(2)}
                     </ListGroup.Item>
                     <ListGroup.Item>
                         <Button 

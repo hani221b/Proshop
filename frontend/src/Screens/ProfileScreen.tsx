@@ -8,8 +8,9 @@ import { toast } from 'react-toastify';
 import { useProfileMutation } from '../slices/usersApiSlice';
 import { setCredentials } from '../slices/authSlice';
 import { useDispatch, useSelector } from 'react-redux';
-import { useGetMyOrdersQuery } from '../slices/orderApiSlice';
+import { useGetMyOrdersQuery } from '../slices/orderApiSlice.ts';
 import { FaTimes } from 'react-icons/fa';
+import { RootState } from '@reduxjs/toolkit/query';
 
 const ProfileScreen = () => {
     const [name, setName] = useState("");
@@ -19,7 +20,7 @@ const ProfileScreen = () => {
 
     const dispatch = useDispatch();
 
-    const { userInfo } = useSelector(state => state.auth);
+    const { userInfo } = useSelector((state: any) => state.auth);
 
     useEffect(() => {
         if(userInfo){
@@ -29,7 +30,7 @@ const ProfileScreen = () => {
         }
     },[userInfo, userInfo.name, userInfo.email])
 
-    const submitHandler = async (e) => {
+    const submitHandler = async (e: any) => {
         e.preventDefault();
         if(password !== confirmPassword){
             toast.error("Password does not match");
@@ -39,7 +40,7 @@ const ProfileScreen = () => {
                 dispatch(setCredentials(res));  
                 toast.success("Profile updated successfully");
             } catch(err){
-                toast.error(err?.data?.message || err?.error);
+                toast.error("Error");
             }
         }
     }
@@ -47,7 +48,7 @@ const ProfileScreen = () => {
     const [updateProfile, {isLoading: loadingUpdateProfile}] =
          useProfileMutation()
 
-    const { data: orders, isLoading, error } = useGetMyOrdersQuery();
+    const { data: orders, isLoading, error } = useGetMyOrdersQuery("");
 
   return <Row>
     <Col md={3}>
@@ -100,7 +101,7 @@ const ProfileScreen = () => {
     </Col>
     <Col md={9}>
         <h2>My Orders</h2>
-        {isLoading ? (<Loader />) : error ? (<Message variant="danger">{error?.data?.message || error.error} </Message>)
+        {isLoading ? (<Loader />) : error ? (<Message variant="danger">Error </Message>)
         : (
             <Table striped hover responsive className='table-sm'>
                 <thead>
@@ -114,7 +115,7 @@ const ProfileScreen = () => {
                     </tr>
                 </thead>
                 <tbody>
-                    { orders.map(order => (
+                    { orders.map((order: any) => (
                         <tr key={order._id}>
                             <td>{order._id}</td>
                             <td>{order.createdAt.substring(0, 10)}</td>

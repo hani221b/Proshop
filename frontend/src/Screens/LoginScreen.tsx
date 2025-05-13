@@ -8,6 +8,7 @@ import Loader from '../components/Loader';
 import { useLoginMutation } from "../slices/usersApiSlice";
 import { setCredentials } from '../slices/authSlice';
 import { toast } from 'react-toastify';
+import { RootState } from '@reduxjs/toolkit/query';
 
 const LoginScreen = () => {
     const [email, setEmail] = useState('');
@@ -18,7 +19,7 @@ const LoginScreen = () => {
 
     const [login, {isLoading}] = useLoginMutation();
 
-    const { userInfo } = useSelector(state => state.auth);
+    const { userInfo } = useSelector((state: any) => state.auth);
 
     const { search } = useLocation();
     const sp = new URLSearchParams(search);
@@ -30,14 +31,14 @@ const LoginScreen = () => {
         }
     }, [userInfo, redirect, navigate]);
  
-    const submitHandler = async (e) => {
+    const submitHandler = async (e: any) => {
         e.preventDefault();
         try {
             const res = await login({email, password}).unwrap();
             dispatch(setCredentials({...res}));
             navigate(redirect);
         } catch(err) {
-            toast.error(err?.data?.message || err.error);
+            toast.error("Something went wrong");
         }
     }
   return (

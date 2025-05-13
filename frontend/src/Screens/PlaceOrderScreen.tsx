@@ -4,16 +4,18 @@ import { Link, useNavigate } from "react-router-dom";
 import {useSelector, useDispatch} from "react-redux";
 import {Button, Row, Col, ListGroup, Image, Card, NavItem} from "react-bootstrap";
 import CheckoutSteps from '../components/CheckoutSteps';
-import { toast } from "react-toastify";
+import { toast, ToastContent } from "react-toastify";
 import Message from "../components/Message"
 import Loader from "../components/Loader"
-import { useCreateOrderMutation } from "../slices/orderApiSlice";
+import { useCreateOrderMutation } from "../slices/orderApiSlice.ts";
 import { clearCartItems } from "../slices/cartSlice"
+import { RootState } from '@reduxjs/toolkit/query';
+import { CartItem } from '../@types/cart';
 
 const PlaceOrderScreen = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const cart = useSelector(state => state.cart);
+  const cart = useSelector((state: any) => state.cart);
 
 
   const [createOrder, {isLoading, error}] = useCreateOrderMutation();
@@ -43,7 +45,7 @@ const PlaceOrderScreen = () => {
 
     } catch(err){
       console.log(err);
-        toast.error(err)
+        toast.error(err as ToastContent<unknown>)
     }
   }
 
@@ -68,7 +70,7 @@ const PlaceOrderScreen = () => {
                     <Message>Your cart is empty!</Message>
                   ) : (
                     <ListGroup>
-                      {cart.cartItems.map((item, index) => (
+                      {cart.cartItems.map((item: CartItem, index: number) => (
                            <ListGroup.Item key={index}>
                            <Row>
                              <Col md={1}>
@@ -125,7 +127,7 @@ const PlaceOrderScreen = () => {
                       </Row>
                    </ListGroup.Item>
                    <ListGroup.Item>
-                        {error && <Message variant="danger">{error.data.message}</Message>}
+                        {error && <Message variant="danger">Error</Message>}
                    </ListGroup.Item>
                    <ListGroup.Item>
                       <Button 

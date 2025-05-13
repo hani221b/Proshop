@@ -1,7 +1,12 @@
 import React from 'react'
 import { FaStar, FaStarHalfAlt, FaRegStar } from 'react-icons/fa'
 
-const Rating = ({value, text}) => {
+interface RatingProps {
+    value: number;     // e.g. 4.5 stars
+    text?: string;     // optional text like "10 reviews"
+  }
+
+const Rating = ({value, text}: RatingProps) => {
   return (
     <div className='rating'>
         <span>

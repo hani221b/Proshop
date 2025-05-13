@@ -5,11 +5,14 @@ import Message from "../components/Message";
 import Loader from "../components/Loader";
 import { useGetOrderDetailsQuery,
    usePayOrderMutation,
-   useGetPayPalClientIdQuery  } from '../slices/orderApiSlice';
+   useGetPayPalClientIdQuery  } from '../slices/orderApiSlice.ts';
 import { PayPalButtons, usePayPalScriptReducer } from "@paypal/react-paypal-js";
 import {toast} from "react-toastify";
 import { useSelector } from 'react-redux';
 import { useEffect } from 'react';
+import { RootState } from '@reduxjs/toolkit/query';
+import { CartItem } from '../@types/cart';
+import { PayPalScriptAction } from '@paypal/react-paypal-js';
 
 const OrderScreen = () => {
   const { id: orderId} = useParams();
@@ -19,22 +22,22 @@ const OrderScreen = () => {
 
   const [{isPending}, paypalDispatch] = usePayPalScriptReducer();
 
-  const {userInfo} = useSelector(state => state.auth);
+  const {userInfo} = useSelector((state: any) => state.auth);
 
-  const { data: paypal, isLoading: loadingPayPal, error: errorPayPal } = useGetPayPalClientIdQuery();
+  const { data: paypal, isLoading: loadingPayPal, error: errorPayPal } = useGetPayPalClientIdQuery("");
 
   useEffect(() => {
     if(!errorPayPal && !loadingPayPal && paypal.clientId){
       const loadPayPalScript = async () => {
         paypalDispatch({
-          type: "resetOptions",
+          type: "resetOptions" as PayPalScriptAction['type'],
           value: {
             "client-id": paypal.clientId,
             "currency": "USD"
-          } 
+          }
         });
         paypalDispatch({ 
-          type: "setLoadingStatus",
+          type: "setLoadingStatus" as PayPalScriptAction['type'],
           value: "pending"
         });
       }
@@ -46,14 +49,14 @@ const OrderScreen = () => {
     }
   }, [order, paypal, paypalDispatch, loadingPayPal, errorPayPal]);
 
-  async function onApprove(data, actions){
-    return actions.order.capture().then(async function (details){
+  async function onApprove(_, actions: any){
+    return actions.order.capture().then(async function (details: any){
       try {
         await payOrder({orderId, details});
         refetch();         
         toast.success("Payment Successful");
       }catch(err){
-        toast.error(err?.data?.message || err.message);
+        toast.error("Somethin went wrong");
       }
     });
   }
@@ -64,11 +67,11 @@ const OrderScreen = () => {
         toast.success("Payment Successful");
   }
 
-  function onError(err){
+  function onError(err: any){
     toast.error(err?.data?.message || err.message);
   }
 
-  function createOrder(data, actions){
+  function createOrder(_, actions: any){
     return actions.order.create({
         purchase_units: [
           {
@@ -77,11 +80,11 @@ const OrderScreen = () => {
             }
           }
         ]
-    }).then((orderId) => {
+    }).then((orderId: string) => {
       return orderId;
     });
   }
-  return isLoading ? <Loader /> : error ? <Message variant="danger" /> :
+  return isLoading ? <Loader /> : error ? <Message children="" variant="danger" /> :
   (
     <>
       <h1>Order {order._id}</h1>
@@ -128,7 +131,7 @@ const OrderScreen = () => {
               </ListGroup.Item>
               <ListGroup>
                 <h2>Order Items</h2>
-                {order.orderItems.map((item, index) => (
+                {order.orderItems.map((item: CartItem, index: number) => (
                   <ListGroup.Item key={index}>
                     <Row>
                       <Col md={1}>
