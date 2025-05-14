@@ -1,28 +1,57 @@
 import React from 'react'
 import {Link, useParams} from "react-router-dom";
-import {Row, Col, ListGroup, Image, Form, Button, Card} from "react-bootstrap";
+import {Row, Col, ListGroup, Image, Card} from "react-bootstrap";
 import Message from "../components/Message";
 import Loader from "../components/Loader";
 import { useGetOrderDetailsQuery,
    usePayOrderMutation,
    useGetPayPalClientIdQuery  } from '../slices/orderApiSlice.ts';
-import { PayPalButtons, usePayPalScriptReducer } from "@paypal/react-paypal-js";
+import { PayPalButtons, usePayPalScriptReducer, DISPATCH_ACTION, SCRIPT_LOADING_STATE } from "@paypal/react-paypal-js";
 import {toast} from "react-toastify";
 import { useSelector } from 'react-redux';
 import { useEffect } from 'react';
-import { RootState } from '@reduxjs/toolkit/query';
+import { RootState } from '../store';
 import { CartItem } from '../@types/cart';
-import { PayPalScriptAction } from '@paypal/react-paypal-js';
+// import { PayPalScriptAction } from '@paypal/react-paypal-js';
 
-const OrderScreen = () => {
-  const { id: orderId} = useParams();
+interface Order {
+  _id: string;
+  user: {
+    name: string;
+    email: string;
+  };
+  shippingAddress: {
+    address: string;
+    city: string;
+    postalCode: string;
+    country: string;
+  };
+  paymentMethod: string;
+  orderItems: CartItem[];
+  itemsPrice: number;
+  shippingPrice: number;
+  taxPrice: number;
+  totalPrice: number;
+  isPaid: boolean;
+  paidAt?: string;
+  isDelivered: boolean;
+  deliveredAt?: string;
+}
+
+interface PayPalClientId {
+  clientId: string;
+}
+
+
+const OrderScreen: React.FC = () => {
+  const { id: orderId} = useParams<{ id: string }>();
   const { data: order, refetch, isLoading, error } = useGetOrderDetailsQuery(orderId);
 
   const [payOrder, {isLoading: loadingPay}] = usePayOrderMutation();
 
   const [{isPending}, paypalDispatch] = usePayPalScriptReducer();
 
-  const {userInfo} = useSelector((state: any) => state.auth);
+  const {userInfo} = useSelector((state: RootState) => state.auth);
 
   const { data: paypal, isLoading: loadingPayPal, error: errorPayPal } = useGetPayPalClientIdQuery("");
 
@@ -30,26 +59,24 @@ const OrderScreen = () => {
     if(!errorPayPal && !loadingPayPal && paypal.clientId){
       const loadPayPalScript = async () => {
         paypalDispatch({
-          type: "resetOptions" as PayPalScriptAction['type'],
+          type: DISPATCH_ACTION.RESET_OPTIONS,
           value: {
-            "client-id": paypal.clientId,
-            "currency": "USD"
-          }
+            clientId: paypal.clientId,
+            currency: 'USD',
+          },
         });
-        paypalDispatch({ 
-          type: "setLoadingStatus" as PayPalScriptAction['type'],
-          value: "pending"
+        paypalDispatch({
+          type: DISPATCH_ACTION.LOADING_STATUS,
+          value: SCRIPT_LOADING_STATE.PENDING,
         });
-      }
-      if(order && !order.isPaid){
-        if(!window.paypal){
-          loadPayPalScript();
-        }
+      };
+      if (order && !order.isPaid && !window.paypal) {
+        loadPayPalScript();
       }
     }
   }, [order, paypal, paypalDispatch, loadingPayPal, errorPayPal]);
 
-  async function onApprove(_, actions: any){
+  async function onApprove(_: any, actions: any){
     return actions.order.capture().then(async function (details: any){
       try {
         await payOrder({orderId, details});
@@ -71,7 +98,7 @@ const OrderScreen = () => {
     toast.error(err?.data?.message || err.message);
   }
 
-  function createOrder(_, actions: any){
+  function createOrder(_: any, actions: any){
     return actions.order.create({
         purchase_units: [
           {
