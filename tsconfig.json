@@ -1,13 +1,14 @@
 {
   "compilerOptions": {
-    "module": "ESNext", 
+    "strict": true,
+    "module": "CommonJS", 
     "moduleResolution": "Node", 
-    "target": "ESNext", 
+    "target": "ES2020", 
     "esModuleInterop": true, 
     "skipLibCheck": true, 
+    "noEmit": true,
     "allowImportingTsExtensions": true,
     "forceConsistentCasingInFileNames": true,
-    "outDir": "./backend/dist", 
     "baseUrl": ".", 
     "paths": {
       "@/*": ["backend/*"]
@@ -15,6 +16,9 @@
     "resolveJsonModule": true,
     "allowSyntheticDefaultImports": true
   },
-  "include": ["backend/**/*.ts"], 
+  "include": [
+    "backend/**/*.ts",
+    "backend/@types/**/*.d.ts"
+  ], 
   "exclude": ["node_modules"]
 }

@@ -2,6 +2,16 @@ import asyncHandler from "../middleware/asyncHanlder.ts";
 import User from "../models/UserModel.ts";
 import jwt from "jsonwebtoken";
 import generateToken from "../utils/generateToken.ts";
+import { IUser } from "../models/UserModel"; 
+
+
+declare global {
+  namespace Express {
+    interface Request {
+      user?: IUser; 
+    }
+  }
+}
 
 // @desc    Auth user & get token
 // @route   POST /api/users/login
