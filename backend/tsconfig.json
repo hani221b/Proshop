@@ -11,14 +11,14 @@
     "forceConsistentCasingInFileNames": true,
     "baseUrl": ".", 
     "paths": {
-      "@/*": ["backend/*"]
+      "@/*": ["/*"]
     },
     "resolveJsonModule": true,
     "allowSyntheticDefaultImports": true
   },
   "include": [
-    "backend/**/*.ts",
-    "backend/@types/**/*.d.ts"
+    "/**/*.ts",
+    "/@types/**/*.d.ts"
   ], 
   "exclude": ["node_modules"]
 }
