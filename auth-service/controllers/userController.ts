@@ -44,13 +44,15 @@ const authUser = asyncHandler(async (req: IGetUserAuthInfoRequest, res: Response
 const registerUser = asyncHandler(async (req: IGetUserAuthInfoRequest, res: Response) => {
     const { name, email, password } = req.body;
     const userExists = await prisma.user.findUnique({ where: {email} });
+    const hasedPassword = await bcrypt.hash(password, 10 as any);
     if(userExists){
         res.status(400);
         throw new Error("User already exists")
     }
     const user = await prisma.user.create({
         data: {
-            name, email, password
+            name, email,
+            password: hasedPassword
         }
     });
     if(user){
@@ -58,7 +60,7 @@ const registerUser = asyncHandler(async (req: IGetUserAuthInfoRequest, res: Resp
         res.status(201).json({
             id: user.id,
             name: user.name,
-            email: user.name,
+            email: user.email,
             iSAdmin: user.isAdmin
         });
     } else {

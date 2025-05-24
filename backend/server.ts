@@ -3,7 +3,6 @@ import dotenv from "dotenv";
 dotenv.config();
 import connectDB from "./config/db.ts";
 import productsRoutes from "./routes/productsRoutes.ts";
-import usersRoutes from "./routes/userRoutes.ts";
 import orderRoutes from "./routes/orderRoutes.ts";
 import { notFound, errorHandler } from "./middleware/errorMiddleware.ts";
 import bodyParser from "body-parser";
@@ -30,7 +29,6 @@ app.use(bodyParser.urlencoded({extended: true}));
 
 
 app.use("/api/products", productsRoutes);
-app.use("/api/users", usersRoutes);
 app.use("/api/orders", orderRoutes);
 app.get("/api/config/paypal", (req, res) => {
   res.send({clientId: process.env.PAYPAL_CLIENT_ID});

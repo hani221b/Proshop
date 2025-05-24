@@ -2,10 +2,24 @@ import { Request, Response } from "express";
 import asyncHandler from "../middleware/asyncHanlder.ts";
 import Order from "../models/OrderModel.ts";
 
+type User = {
+    id: number;
+    email: string;
+    password: string;
+    name: string | null;
+    isAdmin: boolean;
+    createdAt: Date;
+}
+
+
+interface CustomRequest extends Request {
+  user?: User // or any other type
+}
+
 // @desc    Create new order
 // @route   POST /api/orders
 // @access  Private
-const addOrderItems = asyncHandler(async (req: Request, res: Response) => {
+const addOrderItems = asyncHandler(async (req: CustomRequest, res: Response) => {
   const {
     orderItems,
     shippingAddress,
@@ -26,7 +40,7 @@ const addOrderItems = asyncHandler(async (req: Request, res: Response) => {
         product: item._id,
         _id: undefined,
       })),
-      user: req.user!._id,
+      user: req.user!.id,
       shippingAddress,
       paymentMethod,
       itemPrice,
@@ -43,15 +57,15 @@ const addOrderItems = asyncHandler(async (req: Request, res: Response) => {
 // @desc    Get logged in user orders
 // @route   GET /api/orders/my-orders
 // @access  Private
-const getMyOrders = asyncHandler(async (req: Request, res: Response) => {
-  const orders = await Order.find({ user: req.user!._id });
+const getMyOrders = asyncHandler(async (req: CustomRequest, res: Response) => {
+  const orders = await Order.find({ user: req.user!.id });
   res.status(200).json(orders);
 });
 
 // @desc    Get order by id
 // @route   GET /api/orders/:id
 // @access  Private
-const getOrderById = asyncHandler(async (req: Request, res: Response) => {
+const getOrderById = asyncHandler(async (req: CustomRequest, res: Response) => {
   const order = await Order.findById(req.params.id).populate("user", "name email");
 
   if (order) {
@@ -65,7 +79,7 @@ const getOrderById = asyncHandler(async (req: Request, res: Response) => {
 // @desc    Update order to paid
 // @route   PUT /api/orders/:id/pay
 // @access  Private
-const updateOrderToPaid = asyncHandler(async (req: Request, res: Response) => {
+const updateOrderToPaid = asyncHandler(async (req: CustomRequest, res: Response) => {
   const order = await Order.findById(req.params.id);
 
   if (order) {

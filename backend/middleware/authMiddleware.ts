@@ -1,10 +1,20 @@
 import { Request, Response, NextFunction } from "express";
 import jwt, { decode } from "jsonwebtoken";
 import asyncHandler from "./asyncHanlder.ts";
-import User, { IUser } from "../models/UserModel.ts";
+
+type User = {
+    id: number;
+    email: string;
+    password: string;
+    name: string | null;
+    isAdmin: boolean;
+    createdAt: Date;
+}
+
+
 
 interface AuthenticatedRequest extends Request {
-    user?: IUser;
+    user?: User;
   }
 
 //protect routes
@@ -16,15 +26,15 @@ export const protect = asyncHandler(
   
       if (token) {
         try {
-          const decoded = jwt.verify(token, process.env.JWT_SECRET as string) as { userId: string };
-          const user = await User.findById(decoded.userId).select("-password");
+          // const decoded = jwt.verify(token, process.env.JWT_SECRET as string) as { userId: string };
+          // const user = await User.findById(decoded.userId).select("-password");
   
-          if (!user) {
-            res.status(401);
-            throw new Error("User not found");
-          }
+          // if (!user) {
+          //   res.status(401);
+          //   throw new Error("User not found");
+          // }
   
-          req.user = user;
+          // req.user = user;
           next();
         } catch (err) {
           res.status(401);
@@ -43,7 +53,7 @@ export const admin = (
     res: Response,
     next: NextFunction
   ) => {
-    if (req.user && req.user.iSAdmin) {
+    if (req.user && req.user.isAdmin) {
       next();
     } else {
       res.status(401);
