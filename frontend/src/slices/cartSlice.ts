@@ -2,7 +2,7 @@ import {createSlice} from "@reduxjs/toolkit";
 import {updateCart} from "../utils/cartUtils";
 
 interface CartItem {
-    _id: string;
+    id: string;
     name: string;
     qty: number;
     price: number;
@@ -38,10 +38,10 @@ const cartSlice = createSlice({
     reducers: {
         addToCart: (state, action) => {
             const item = action.payload;
-            const existItem = state.cartItems.find((x: any) => x._id === item._id);
+            const existItem = state.cartItems.find((x: any) => x.id === item.id);
             if(existItem) {
                 state.cartItems = state.cartItems.map((x: any) =>
-                         x._id === existItem._id ? item : x
+                         x.id === existItem.id ? item : x
                 );
             } else {
                 state.cartItems = [...state.cartItems, item];
@@ -50,7 +50,7 @@ const cartSlice = createSlice({
             return updateCart(state);
         },
         removeFromCart: (state, action) => {
-            state.cartItems = state.cartItems.filter((item: any) => item._id !== action.payload);
+            state.cartItems = state.cartItems.filter((item: any) => item.id !== action.payload);
             return updateCart(state);
         },
         saveShippingAddress: (state, action) => {

@@ -19,7 +19,7 @@ const getProducts = asyncHandler(async (_: Request, res: Response) => {
 // @access  Public
 const getProductById = asyncHandler(async (req: Request, res: Response) => {
     const product = await prisma.product.findUnique({where: {
-        id: req.params.id as any
+        id: parseInt(req.params.id)
     }});
     if(product){
          res.json(product);

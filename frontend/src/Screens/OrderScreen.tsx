@@ -15,7 +15,7 @@ import { CartItem } from '../@types/cart';
 // import { PayPalScriptAction } from '@paypal/react-paypal-js';
 
 interface Order {
-  _id: string;
+  id: number;
   user: {
     name: string;
     email: string;
@@ -114,7 +114,7 @@ const OrderScreen: React.FC = () => {
   return isLoading ? <Loader /> : error ? <Message children="" variant="danger" /> :
   (
     <>
-      <h1>Order {order._id}</h1>
+      <h1>Order {order.id}</h1>
       <Row>
         <Col md={8}>
             <ListGroup>

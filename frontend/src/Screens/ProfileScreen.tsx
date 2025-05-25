@@ -36,7 +36,7 @@ const ProfileScreen = () => {
             toast.error("Password does not match");
         } else {
             try {
-                const res = await updateProfile({_id: userInfo._id, name, email, password}).unwrap();  
+                const res = await updateProfile({id: userInfo.id, name, email, password}).unwrap();  
                 dispatch(setCredentials(res));  
                 toast.success("Profile updated successfully");
             } catch(err){
@@ -116,8 +116,8 @@ const ProfileScreen = () => {
                 </thead>
                 <tbody>
                     { orders.map((order: any) => (
-                        <tr key={order._id}>
-                            <td>{order._id}</td>
+                        <tr key={order.id}>
+                            <td>{order.id}</td>
                             <td>{order.createdAt.substring(0, 10)}</td>
                             <td>{order.totalPrice}</td>
                             <td>{order.totalPrice}</td>
@@ -136,7 +136,7 @@ const ProfileScreen = () => {
                                 ) }
                             </td>
                             <td>
-                                <LinkContainer to={`/order/${order._id}`}>
+                                <LinkContainer to={`/order/${order.id}`}>
                                     <Button className='btn-sm' variant='light'>   
                                         Details
                                     </Button>
