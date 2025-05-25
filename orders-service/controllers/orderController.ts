@@ -1,6 +1,10 @@
 import { Request, Response } from "express";
-import asyncHandler from "../middleware/asyncHanlder.ts";
-import Order from "../models/OrderModel.ts";
+import asyncHandler from "../middleware/asyncHanlder";
+import { PrismaClient } from '@prisma/client';
+import bcrypt from "bcryptjs";
+
+
+const prisma = new PrismaClient();
 
 type User = {
     id: number;
@@ -34,22 +38,36 @@ const addOrderItems = asyncHandler(async (req: CustomRequest, res: Response) => 
     res.status(400);
     throw new Error("No order items");
   } else {
-    const order = new Order({
-      orderItems: orderItems.map((item: any) => ({
-        ...item,
-        product: item._id,
-        _id: undefined,
+const createdOrder = await prisma.order.create({
+  data: {
+    userId: req.user?.id as any, 
+    shippingAddress: {
+      create: {
+        address: shippingAddress.address,
+        city: shippingAddress.city,
+        postalCode: shippingAddress.postalCode,
+        country: shippingAddress.country,
+      },
+    },
+    paymentMethod,
+    itemPrice,
+    taxPrice,
+    shippingPrice,
+    totalPrice,
+    isPaid: false,
+    isDelivered: false,
+    orderItems: {
+      create: orderItems.map((item: any) => ({
+        name: item.name,
+        qty: item.qty,
+        image: item.image,
+        product: {
+          connect: { id: item.id }, // product must already exist
+        },
       })),
-      user: req.user!.id,
-      shippingAddress,
-      paymentMethod,
-      itemPrice,
-      taxPrice,
-      shippingPrice,
-      totalPrice,
-    });
-
-    const createdOrder = await order.save();
+    },
+  },
+});
     res.status(201).json(createdOrder);
   }
 });
@@ -58,7 +76,9 @@ const addOrderItems = asyncHandler(async (req: CustomRequest, res: Response) => 
 // @route   GET /api/orders/my-orders
 // @access  Private
 const getMyOrders = asyncHandler(async (req: CustomRequest, res: Response) => {
-  const orders = await Order.find({ user: req.user!.id });
+  const orders = await prisma.order.findUnique({ where: {
+    id: req.user!.id as any
+  } });
   res.status(200).json(orders);
 });
 
@@ -66,7 +86,9 @@ const getMyOrders = asyncHandler(async (req: CustomRequest, res: Response) => {
 // @route   GET /api/orders/:id
 // @access  Private
 const getOrderById = asyncHandler(async (req: CustomRequest, res: Response) => {
-  const order = await Order.findById(req.params.id).populate("user", "name email");
+  const order = await prisma.order.findUnique({where: {
+    id: req.params.id
+  }});
 
   if (order) {
     res.status(200).json(order);
@@ -80,20 +102,23 @@ const getOrderById = asyncHandler(async (req: CustomRequest, res: Response) => {
 // @route   PUT /api/orders/:id/pay
 // @access  Private
 const updateOrderToPaid = asyncHandler(async (req: CustomRequest, res: Response) => {
-  const order = await Order.findById(req.params.id);
+  const order = await prisma.order.findUnique({where: {
+    id: req.params.id
+  }});
 
+  //! THIS MUST BE UPDATED IN THE FUTURE
   if (order) {
-    order.isPaid = true;
-    order.paidAt = new Date();
-    order.paymentResult = {
-      id: req.body.id,
-      status: req.body.status,
-      update_time: req.body.update_time,
-      emailAddress: req.body.payer.email_address,
-    };
+    // order.isPaid = true;
+    // order.paidAt = new Date();
+    // order.paymentResult = {
+    //   id: req.body.id,
+    //   status: req.body.status,
+    //   update_time: req.body.update_time,
+    //   emailAddress: req.body.payer.email_address,
+    // };
 
-    const updatedOrder = await order.save();
-    res.status(200).json(updatedOrder);
+    // const updatedOrder = await order.save();
+    // res.status(200).json(updatedOrder);
   } else {
     res.status(404);
     throw new Error("Order not found!");

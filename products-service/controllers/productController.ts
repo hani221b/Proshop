@@ -1,6 +1,5 @@
 import { Request, Response } from "express";
-import asyncHandler from "../../backend/middleware/asyncHanlder";
-import Product from "../../backend/models/ProductModel";
+import asyncHandler from "..//middleware/asyncHanlder";
 import { PrismaClient } from '@prisma/client';
 import bcrypt from "bcryptjs";
 
