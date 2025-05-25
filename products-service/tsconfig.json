@@ -1,0 +1,24 @@
+{
+  "compilerOptions": {
+    "strict": true,
+    "module": "CommonJS", 
+    "moduleResolution": "Node", 
+    "target": "ES2020", 
+    "esModuleInterop": true, 
+    "skipLibCheck": true, 
+    "noEmit": true,
+    "allowImportingTsExtensions": true,
+    "forceConsistentCasingInFileNames": true,
+    "baseUrl": ".", 
+    "paths": {
+      "@/*": ["/*"]
+    },
+    "resolveJsonModule": true,
+    "allowSyntheticDefaultImports": true
+  },
+  "include": [
+    "/**/*.ts",
+    "/@types/**/*.d.ts"
+  ], 
+  "exclude": ["node_modules"]
+}

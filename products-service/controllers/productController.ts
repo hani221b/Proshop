@@ -1,12 +1,17 @@
 import { Request, Response } from "express";
-import asyncHandler from "../middleware/asyncHanlder.ts";
-import Product from "../models/ProductModel.ts";
+import asyncHandler from "../../backend/middleware/asyncHanlder";
+import Product from "../../backend/models/ProductModel";
+import { PrismaClient } from '@prisma/client';
+import bcrypt from "bcryptjs";
+
+
+const prisma = new PrismaClient();
  
 // @desc    Fetch all products
 // @route   Get /api/products
 // @access  Public
 const getProducts = asyncHandler(async (_: Request, res: Response) => {
-    const products = await Product.find({});
+    const products = await prisma.product.findMany();
     res.json(products);
 });
 
@@ -14,7 +19,9 @@ const getProducts = asyncHandler(async (_: Request, res: Response) => {
 // @route   Get /api/products/:id
 // @access  Public
 const getProductById = asyncHandler(async (req: Request, res: Response) => {
-    const product = await Product.findById(req.params.id);
+    const product = await prisma.product.findUnique({where: {
+        id: req.params.id as any
+    }});
     if(product){
          res.json(product);
     }
