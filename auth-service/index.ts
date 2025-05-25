@@ -1,8 +1,8 @@
 import express from "express";
 import dotenv from "dotenv";
 dotenv.config();
-import usersRoutes from "./routes/userRoutes.ts";
-import { notFound, errorHandler } from "./middleware/errorMiddleware.ts";
+import usersRoutes from "./routes/userRoutes";
+import { notFound, errorHandler } from "./middleware/errorMiddleware";
 import bodyParser from "body-parser";
 import cookieParser from "cookie-parser";
 import cors from "cors";

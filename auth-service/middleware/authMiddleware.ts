@@ -1,24 +1,23 @@
 import { Request, Response, NextFunction } from "express";
 import jwt, { decode } from "jsonwebtoken";
-import asyncHandler from "./asyncHanlder.ts";
+import asyncHandler from "./asyncHanlder";
 import { PrismaClient, User, Prisma } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
-
-
 interface AuthenticatedRequest extends Request {
-    user?: SafeUser;
-  }
+    user?: User;
+  } 
 
-type SafeUser = Prisma.UserGetPayload<{
-  select: {
-    id: true;
-    name: true;
-    email: true;
-    isAdmin: true;
-  };
-}>;
+// type SafeUser = Prisma.UserGetPayload<{
+//   select: {
+//     id: true;
+//     name: true;
+//     email: true;
+//     password?: true
+//     isAdmin: true;
+//   };
+// }>;
 
 //protect routes
 export const protect = asyncHandler(
@@ -30,14 +29,14 @@ export const protect = asyncHandler(
       if (token) {
         try {
           const decoded = jwt.verify(token, process.env.JWT_SECRET as string) as { userId: number };
-          const user: SafeUser | null = await prisma.user.findUnique({where: {id: decoded.userId},
+          const user: User | null = await prisma.user.findUnique({where: {id: decoded.userId},
             select: {
               id: true,
               name: true,
               email: true,
-              password: false,
+              password: true, //!THIS SHOULD BE REMOVED IN THE FURTURE
               isAdmin: true,
-              createdAt: false
+              createdAt: true
             }});
   
           if (!user) {

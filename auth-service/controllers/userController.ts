@@ -1,8 +1,8 @@
-import asyncHandler from "../middleware/asyncHanlder.ts";
+import asyncHandler from "../middleware/asyncHanlder";
 // import User from "../models/UserModel.ts";
 import jwt from "jsonwebtoken";
 import { Request, Response } from 'express';
-import generateToken from "../utils/generateToken.ts";
+import generateToken from "../utils/generateToken";
 import { PrismaClient, User } from '@prisma/client';
 import bcrypt from "bcryptjs";
 
