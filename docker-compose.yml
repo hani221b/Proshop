@@ -1,0 +1,96 @@
+services:
+
+  auth-db:
+    image: postgres:15
+    container_name: auth-db
+    env_file:
+      - ./auth-service/.db.env
+    volumes:
+      - auth-db-data:/var/lib/postgresql/data
+    networks:
+      - app-network
+
+  auth-service:
+    build: ./auth-service
+    ports: 
+      - "5001:5001"
+    volumes:
+      - ./auth-service:/app
+      - /app/node_modules
+    env_file:
+      - ./auth-service/.env
+    depends_on:
+      - auth-db
+    networks:
+      - app-network
+
+  products-db:
+    image: postgres:15
+    container_name: products-db
+    env_file:
+      - ./products-service/.db.env
+    volumes:
+      - products-db-data:/var/lib/postgresql/data
+    networks:
+      - app-network
+  
+  products-service:
+    build: ./products-service
+    ports: 
+      - "5002:5002"
+    volumes:
+      - ./products-service:/app
+      - /app/node_modules    
+    depends_on:
+      - products-db
+    env_file:
+      - ./products-service/.env
+    networks:
+      - app-network
+
+  orders-db:
+    image: postgres:15
+    container_name: orders-db
+    env_file:
+      - ./orders-service/.db.env
+    volumes:
+      - orders-db-data:/var/lib/postgresql/data
+    networks:
+      - app-network
+  
+  orders-service:
+    build: ./orders-service
+    ports:
+      - "5003:5003"
+    volumes:
+      - ./orders-service:/app
+      - /app/node_modules
+    env_file:
+      - ./orders-service/.env
+    depends_on:
+      - orders-db
+    networks:
+      - app-network
+
+  frontend:
+    build: ./frontend
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    environment:
+      - REACT_APP_AUTH_SERVICE_URL=http://localhost:5001
+      - REACT_APP_PRODUCTS_SERVICE_URL=http://localhost:5002
+      - REACT_APP_ORDERS_SERVICE_URL=http://localhost:5003
+    networks:
+      - app-network
+
+volumes:
+  auth-db-data:
+  products-db-data:
+  orders-db-data:
+
+networks:
+  app-network:
+    driver: bridge

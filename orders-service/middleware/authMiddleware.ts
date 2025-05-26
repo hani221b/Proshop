@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import jwt, { decode } from "jsonwebtoken";
-import asyncHandler from "./asyncHanlder.ts";
+import asyncHandler from "./asyncHanlder";
 
 type User = {
     id: number;

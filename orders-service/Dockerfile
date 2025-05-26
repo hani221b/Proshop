@@ -14,10 +14,10 @@ RUN npm run build
 
 RUN npm install -g nodemon ts-node
 
-EXPOSE 5001
+EXPOSE 5003
 
 CMD ["nodemon", "dist/index.js"]
 
-# docker build -t auth-service .
+# docker build -t orders-service .
 
-# docker run -d -p 5001:5001 auth-service
+# docker run -d -p 5003:5003 orders-service
