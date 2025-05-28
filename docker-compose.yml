@@ -3,6 +3,7 @@ services:
   auth-db:
     image: postgres:15
     container_name: auth-db
+    restart: always
     env_file:
       - ./auth-service/.db.env
     volumes:
@@ -12,6 +13,7 @@ services:
 
   auth-service:
     build: ./auth-service
+    restart: on-failure
     ports: 
       - "5001:5001"
     volumes:
@@ -27,6 +29,7 @@ services:
   products-db:
     image: postgres:15
     container_name: products-db
+    restart: always
     env_file:
       - ./products-service/.db.env
     volumes:
@@ -36,6 +39,7 @@ services:
   
   products-service:
     build: ./products-service
+    restart: on-failure
     ports: 
       - "5002:5002"
     volumes:
@@ -51,6 +55,7 @@ services:
   orders-db:
     image: postgres:15
     container_name: orders-db
+    restart: always
     env_file:
       - ./orders-service/.db.env
     volumes:
@@ -60,6 +65,7 @@ services:
   
   orders-service:
     build: ./orders-service
+    restart: on-failure
     ports:
       - "5003:5003"
     volumes:
@@ -74,6 +80,7 @@ services:
 
   frontend:
     build: ./frontend
+    restart: on-failure
     ports:
       - "3000:3000"
     volumes:
@@ -83,6 +90,14 @@ services:
       - REACT_APP_AUTH_SERVICE_URL=http://localhost:5001
       - REACT_APP_PRODUCTS_SERVICE_URL=http://localhost:5002
       - REACT_APP_ORDERS_SERVICE_URL=http://localhost:5003
+    networks:
+      - app-network
+
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - "8080:8080"
     networks:
       - app-network
 
