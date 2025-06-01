@@ -15,5 +15,12 @@ spec:
       containers:
         - name: products-service-cont
           image: hani221b/proshop-products-service:0.0.1
+          imagePullPolicy: Always
+          env:  
+          - name: DATABASE_URL
+            valueFrom:
+              secretKeyRef:
+                name: products-service-secret
+                key: DATABASE_URL
           ports: 
             - containerPort: 5002

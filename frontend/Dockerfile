@@ -8,4 +8,6 @@ RUN npm install
 COPY . .
 
 EXPOSE 3000
-CMD ["npm", "start"]
+
+# THIS COMMAND IS NOT SECURE AND MUST BE REPLACED IN THE A PROD ENV
+CMD ["sh", "-c", "DANGEROUSLY_DISABLE_HOST_CHECK=true HOST=0.0.0.0 npm start"] 
