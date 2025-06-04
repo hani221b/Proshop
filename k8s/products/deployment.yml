@@ -12,6 +12,26 @@ spec:
       labels:
         app: products-service
     spec:
+      initContainers:
+      - name: prisma-migrate
+        image: hani221b/proshop-products-service:0.0.1
+        command: ["npx", "prisma", "migrate", "deploy"]
+        env:
+        - name: POSTGRES_DB
+          valueFrom:
+            secretKeyRef:
+              name: products-db-secret
+              key: POSTGRES_DB
+        - name: POSTGRES_USER
+          valueFrom:
+            secretKeyRef:
+              name: products-db-secret
+              key: POSTGRES_USER
+        - name: POSTGRES_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: products-db-secret
+              key: POSTGRES_PASSWORD
       containers:
         - name: products-service-cont
           image: hani221b/proshop-products-service:0.0.1
