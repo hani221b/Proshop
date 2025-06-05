@@ -15,6 +15,7 @@ spec:
       containers:
         - name: orders-service-cont
           image: hani221b/proshop-orders-service:0.0.1
+          imagePullPolicy: Always
           env:  
           - name: DATABASE_URL
             valueFrom:

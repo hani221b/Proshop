@@ -15,6 +15,7 @@ spec:
       initContainers:
       - name: prisma-migrate
         image: hani221b/proshop-products-service:0.0.1
+        imagePullPolicy: Always
         command: ["npx", "prisma", "migrate", "deploy"]
         env:
         - name: POSTGRES_DB
@@ -35,6 +36,7 @@ spec:
       containers:
         - name: products-service-cont
           image: hani221b/proshop-products-service:0.0.1
+          imagePullPolicy: Always
           imagePullPolicy: Always
           env:  
           - name: DATABASE_URL
