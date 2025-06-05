@@ -4,7 +4,7 @@ dotenv.config();
 import ordersRoutes from "./routes/ordersRoutes";
 import { notFound, errorHandler } from "./middleware/errorMiddleware";
 import bodyParser from "body-parser";
-import cookieParser from "cookie-parser";cd 
+import cookieParser from "cookie-parser"; 
 import cors from "cors";
 
 const port = process.env.PORT || 5003;
