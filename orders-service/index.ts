@@ -4,10 +4,10 @@ dotenv.config();
 import ordersRoutes from "./routes/ordersRoutes";
 import { notFound, errorHandler } from "./middleware/errorMiddleware";
 import bodyParser from "body-parser";
-import cookieParser from "cookie-parser";
+import cookieParser from "cookie-parser";cd 
 import cors from "cors";
 
-const port = process.env.PORT || 5002;
+const port = process.env.PORT || 5003;
 
 const app = express();
 
@@ -25,7 +25,7 @@ app.use(bodyParser.urlencoded({extended: true}));
 
 
 
-app.use("/api/products", ordersRoutes);
+app.use("/api/orders", ordersRoutes);
 app.get("/api/config/paypal", (req, res) => {
   res.send({clientId: process.env.PAYPAL_CLIENT_ID});
 })
