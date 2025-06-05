@@ -1,17 +1,17 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: products-db
+  name: auth-db
   namespace: default
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: products-db
+      app: auth-db
   template:
     metadata:
       labels:
-        app: products-db
+        app: auth-db
     spec:
       containers:
       - name: postgres
@@ -22,17 +22,17 @@ spec:
         - name: POSTGRES_DB
           valueFrom:
             secretKeyRef:
-              name: products-db-secret
+              name: auth-db-secret
               key: POSTGRES_DB
         - name: POSTGRES_USER
           valueFrom:
             secretKeyRef:
-              name: products-db-secret
+              name: auth-db-secret
               key: POSTGRES_USER
         - name: POSTGRES_PASSWORD
           valueFrom:
             secretKeyRef:
-              name: products-db-secret
+              name: auth-db-secret
               key: POSTGRES_PASSWORD
         volumeMounts:
         - name: postgres-storage
@@ -40,4 +40,4 @@ spec:
       volumes:
         - name: postgres-storage  
           persistentVolumeClaim:
-            claimName: products-db-pvc 
+            claimName: auth-db-pvc  
