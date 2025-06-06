@@ -14,7 +14,7 @@ spec:
     spec:
       initContainers:
       - name: prisma-migrate
-        image: hani221b/proshop-products-service:0.0.1
+        image: hani221b/proshop-products-service:latest
         imagePullPolicy: Always
         command: ["npx", "prisma", "migrate", "deploy"]
         env:
@@ -35,7 +35,7 @@ spec:
               key: POSTGRES_PASSWORD
       containers:
         - name: products-service-cont
-          image: hani221b/proshop-products-service:0.0.1
+          image: hani221b/proshop-products-service:latest
           imagePullPolicy: Always
           imagePullPolicy: Always
           env:  

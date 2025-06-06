@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: frontend-cont
-          image: hani221b/proshop-frontend:0.0.1
+          image: hani221b/proshop-frontend:latest
           imagePullPolicy: Always
           ports:
             - containerPort: 3000 

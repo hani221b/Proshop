@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: auth-service-cont
-          image: hani221b/proshop-auth-service:0.0.1
+          image: hani221b/proshop-auth-service:latest
           imagePullPolicy: Always
           env:  
           - name: DATABASE_URL
