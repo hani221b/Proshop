@@ -35,6 +35,6 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           context: ./${{ matrix.service }}
-          file: ./$proshop-{{ matrix.service }}/Dockerfile
+          file: ./${{ matrix.service }}/Dockerfile
           push: true
           tags: hani221b/proshop-${{ matrix.service }}:latest
