@@ -16,7 +16,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        service: [proshop-frontend, proshop-orders-service, proshop-products-service, proshop-auth-service]
+        service: [frontend, orders-service, products-service, auth-service]
 
     steps:
       - name: Checkout code
