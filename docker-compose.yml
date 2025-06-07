@@ -19,7 +19,6 @@ services:
     volumes:
       - ./auth-service:/app
       - /app/node_modules
-      - /app/dist 
     env_file:
       - ./auth-service/.env
     depends_on:
@@ -46,7 +45,6 @@ services:
     volumes:
       - ./products-service:/app
       - /app/node_modules   
-      - /app/dist  
     depends_on:
       - products-db
     env_file:
@@ -73,7 +71,6 @@ services:
     volumes:
       - ./orders-service:/app
       - /app/node_modules
-      - /app/dist 
     env_file:
       - ./orders-service/.env
     depends_on:

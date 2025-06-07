@@ -18,7 +18,7 @@ RUN npm install -g nodemon ts-node
 
 EXPOSE 5001
 
-CMD ["sh", "-c", "npx prisma migrate deploy && nodemon dist/index.js"]
+CMD ["sh", "-c", "npx prisma migrate deploy && npm run dev:docker"]
 
 # docker build -t auth-service .
 

@@ -21,9 +21,9 @@ interface AuthenticatedRequest extends Request {
 export const protect = asyncHandler(
     async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
       let token: string | undefined;
-  
+      
       token = req.cookies?.jwt;
-  
+      
       if (token) {
         try {
           // const decoded = jwt.verify(token, process.env.JWT_SECRET as string) as { userId: string };
