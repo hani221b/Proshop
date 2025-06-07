@@ -19,6 +19,7 @@ services:
     volumes:
       - ./auth-service:/app
       - /app/node_modules
+      - /app/dist 
     env_file:
       - ./auth-service/.env
     depends_on:
@@ -44,7 +45,8 @@ services:
       - "5002:5002"
     volumes:
       - ./products-service:/app
-      - /app/node_modules    
+      - /app/node_modules   
+      - /app/dist  
     depends_on:
       - products-db
     env_file:
@@ -71,6 +73,7 @@ services:
     volumes:
       - ./orders-service:/app
       - /app/node_modules
+      - /app/dist 
     env_file:
       - ./orders-service/.env
     depends_on:
@@ -98,6 +101,27 @@ services:
       - "8080:8080"
     networks:
       - app-network
+
+  prometheus:
+    image: prom/prometheus
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+    ports:
+      - "9090:9090"
+    networks:
+      - app-network 
+
+  grafana:
+    image: grafana/grafana
+    ports:
+      - "3001:3001"
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+      - GF_SERVER_HTTP_PORT=3001 
+    depends_on:
+      - prometheus
+    networks:
+      - app-network 
 
 volumes:
   auth-db-data:
