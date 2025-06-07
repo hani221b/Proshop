@@ -1,5 +1,7 @@
 FROM node:20-alpine
 
+RUN apk add --no-cache vim curl
+
 WORKDIR /app
 
 COPY package*.json ./
@@ -16,7 +18,7 @@ RUN npm install -g nodemon ts-node
 
 EXPOSE 5002
 
-CMD ["nodemon", "dist/index.js"]
+CMD ["sh", "-c", "npx prisma migrate deploy && nodemon dist/index.js"]
 
 # docker build -t products-service .
 
