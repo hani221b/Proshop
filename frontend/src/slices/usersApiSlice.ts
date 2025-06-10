@@ -8,6 +8,7 @@ export const usersApiSlice = apiSlice.injectEndpoints({
                 url: `${USERS_URL}/login`,
                 method: "POST",
                 body: data,
+                credentials: 'include',
             }),
             // keepUnusedDataFor: 5
         }),
@@ -28,7 +29,8 @@ export const usersApiSlice = apiSlice.injectEndpoints({
             query: (data) => ({
                 url: `${USERS_URL}/profile`,
                 method: "PUT",
-                body: data
+                body: data,
+                credentials: 'include',
             })
         })
     })
