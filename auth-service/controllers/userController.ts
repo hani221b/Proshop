@@ -152,7 +152,18 @@ const getUsers = asyncHandler(async (req, res) => {
 // @route   Get /api/users/:id
 // @access  Private/Admin
 const getUsersById = asyncHandler(async (req, res) => {
-    res.send("getUsersById");
+    const idParam = req.params?.id;
+    const id = parseInt(idParam);
+        
+    const user = await prisma.user.findUnique({where: {
+        id: id
+    }});
+    if(user){
+        res.status(200).json(user);
+    } else {
+        res.status(500);
+        throw new Error("Could not fetch user!");
+    }
 });
 
 // @desc    Delete users

@@ -76,8 +76,8 @@ const createdOrder = await prisma.order.create({
 // @route   GET /api/orders/my-orders
 // @access  Private
 const getMyOrders = asyncHandler(async (req: CustomRequest, res: Response) => {
-  const orders = await prisma.order.findUnique({ where: {
-    id: req.user!.id as any
+  const orders = await prisma.order.findMany({ where: {
+    userId: req.user!.id
   } });
   res.status(200).json(orders);
 });
@@ -86,28 +86,26 @@ const getMyOrders = asyncHandler(async (req: CustomRequest, res: Response) => {
 // @route   GET /api/orders/:id
 // @access  Private
 const getOrderById = asyncHandler(async (req: CustomRequest, res: Response) => {
-  const order = await prisma.order.findUnique({where: {
-    id: req.params.id
-  }});
-
-  if (order) {
-    res.status(200).json(order);
-  } else {
-    res.status(404);
-    throw new Error("Order not found!");
-  }
+  // const order = await prisma.order.findMany();
+  
+  // if (order) {
+  //   res.status(200).json(order);
+  // } else {
+  //   res.status(404);
+  //   return;
+  // }
 });
 
 // @desc    Update order to paid
 // @route   PUT /api/orders/:id/pay
 // @access  Private
 const updateOrderToPaid = asyncHandler(async (req: CustomRequest, res: Response) => {
-  const order = await prisma.order.findUnique({where: {
-    id: req.params.id
-  }});
+  // const order = await prisma.order.findUnique({where: {
+  //   id: req.params.id
+  // }});
 
   //! THIS MUST BE UPDATED IN THE FUTURE
-  if (order) {
+  if (true) {
     // order.isPaid = true;
     // order.paidAt = new Date();
     // order.paymentResult = {

@@ -14,7 +14,7 @@ COPY . .
 
 RUN npm run build
 
-RUN npm install -g nodemon ts-node
+RUN npm install -g nodemon
 
 EXPOSE 5003
 

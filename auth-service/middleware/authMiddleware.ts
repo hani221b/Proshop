@@ -38,21 +38,26 @@ export const protect = asyncHandler(
               isAdmin: true,
               createdAt: true
             }});
-  
-          if (!user) {
-            res.status(401);
-            throw new Error("User not found");
-          }
-          
+            
+            if (!user) {
+              res.status(401);
+              throw new Error("User not found");
+            }
+            
           (req as AuthenticatedRequest).user = user;  
           next();
         } catch (err) {
-          res.status(401);
-          throw new Error("Token Failed!");
+          console.log(err);
+          
+          // res.status(401);
+          // throw new Error("Token Failed!");
         }
       } else {
-        res.status(401);
-        throw new Error("Unauthorized!");
+        console.log("Unauthorized");
+        
+        // log
+        // res.status(401);
+        // throw new Error("Unauthorized!");
       }
     }
   );
