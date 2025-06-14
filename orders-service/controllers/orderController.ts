@@ -28,17 +28,18 @@ const addOrderItems = asyncHandler(async (req: CustomRequest, res: Response) => 
     orderItems,
     shippingAddress,
     paymentMethod,
-    itemPrice,
     taxPrice,
+    itemPrice,
     shippingPrice,
     totalPrice,
   } = req.body;
-
+  
   if (!orderItems || orderItems.length === 0) {
     res.status(400);
     throw new Error("No order items");
   } else {
 const createdOrder = await prisma.order.create({
+  
   data: {
     userId: req.user?.id as any, 
     shippingAddress: {
@@ -49,11 +50,11 @@ const createdOrder = await prisma.order.create({
         country: shippingAddress.country,
       },
     },
+    itemPrice: parseFloat(itemPrice),  
+    taxPrice: parseFloat(taxPrice),
+    shippingPrice: parseFloat(shippingPrice),
+    totalPrice: parseFloat(totalPrice),
     paymentMethod,
-    itemPrice,
-    taxPrice,
-    shippingPrice,
-    totalPrice,
     isPaid: false,
     isDelivered: false,
     orderItems: {
@@ -61,13 +62,11 @@ const createdOrder = await prisma.order.create({
         name: item.name,
         qty: item.qty,
         image: item.image,
-        product: {
-          connect: { id: item.id }, // product must already exist
-        },
+        productId: item.id, 
       })),
+    }
     },
-  },
-});
+  });
     res.status(201).json(createdOrder);
   }
 });
