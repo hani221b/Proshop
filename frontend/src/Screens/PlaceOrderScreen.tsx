@@ -34,7 +34,7 @@ const PlaceOrderScreen = () => {
           orderItems: cart.cartItems,
           shippingAddress: cart.shippingAddress,
           paymentMethod: cart.paymentMethod,
-          itemsPrice: cart.itemsPrice,
+          itemPrice: cart.itemPrice,
           shippingPrice: cart.shippingPrice,
           taxPrice: cart.taxPrice,
           totalPrice: cart.totalPrice,
@@ -102,7 +102,7 @@ const PlaceOrderScreen = () => {
                       <Row>
                         <Col>Items:</Col>
                         <Col>
-                        ${cart.itemsPrice}</Col>
+                        ${cart.itemPrice}</Col>
                       </Row>
                    </ListGroup.Item>
                    <ListGroup.Item>

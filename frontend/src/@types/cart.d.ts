@@ -6,7 +6,7 @@ export interface CartItem {
     image: string;
     countInStock: number;
     product: any;
-    itemsPrice: any;
+    itemPrice: any;
     // add more fields if needed
   }
   

@@ -28,7 +28,7 @@ interface Order {
   };
   paymentMethod: string;
   orderItems: CartItem[];
-  itemsPrice: number;
+  itemPrice: number;
   shippingPrice: number;
   taxPrice: number;
   totalPrice: number;
@@ -170,7 +170,7 @@ const OrderScreen: React.FC = () => {
                         </Link>
                       </Col>
                       <Col md={4}>
-                        {item.qty} x ${item.itemsPrice} = ${item.qty * item.itemsPrice}
+                        {item.qty} x ${item.itemPrice} = ${item.qty * item.itemPrice}
                       </Col>
                     </Row>
                   </ListGroup.Item>
@@ -188,7 +188,7 @@ const OrderScreen: React.FC = () => {
                 <ListGroup.Item>
                   <Row>
                     <Col>Items</Col>
-                    <Col>${order.itemsPrice}</Col>
+                    <Col>${order.itemPrice}</Col>
                   </Row>
 
                   <Row>
