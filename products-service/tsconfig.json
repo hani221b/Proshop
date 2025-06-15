@@ -11,6 +11,7 @@
     "baseUrl": ".", 
     "outDir": "dist/",  
     "rootDir": "."  ,
+    "types": ["jest", "node"],
     "paths": {
       "@/*": ["/*"]
     },
