@@ -3,7 +3,7 @@ import asyncHandler from "../middleware/asyncHanlder";
 import jwt from "jsonwebtoken";
 import { Request, Response } from 'express';
 import generateToken from "../utils/generateToken";
-import { PrismaClient, User } from '@prisma/client';
+import { PrismaClient, User, Prisma } from '@prisma/client';
 import bcrypt from "bcryptjs";
 
 
@@ -14,14 +14,28 @@ async function matchPassword(enteredPassword: string, userPassword: string): Pro
 
 const prisma = new PrismaClient();
 
-interface IGetUserAuthInfoRequest extends Request {
-  user?: User // or any other type
+type SafeUser = Prisma.UserGetPayload<{
+  select: {
+    id: true;
+    name: true;
+    email: true;
+    isAdmin: true;
+    createdAt: true;
+  };
+}>;
+
+declare global {
+  namespace Express {
+    interface Request {
+      user?: SafeUser;
+    }
+  }
 }
 
 // @desc    Auth user & get token
 // @route   POST /api/users/login
 // @access  PublicIGetUserAuthInfoRequest
-const authUser = asyncHandler(async (req: IGetUserAuthInfoRequest, res: Response) => {
+const authUser = asyncHandler(async (req: Request, res: Response) => {
     const {email, password} = req.body;
     const user = await prisma.user.findUnique({ where: {email} });
     if(user && (await matchPassword(password, user.password))){
@@ -41,7 +55,7 @@ const authUser = asyncHandler(async (req: IGetUserAuthInfoRequest, res: Response
 // @desc    Register user
 // @route   POST /api/users/login
 // @access  Public
-const registerUser = asyncHandler(async (req: IGetUserAuthInfoRequest, res: Response) => {
+const registerUser = asyncHandler(async (req: Request, res: Response) => {
     const { name, email, password } = req.body;
     const userExists = await prisma.user.findUnique({ where: {email} });
     const hasedPassword = await bcrypt.hash(password, 10 as any);
@@ -85,7 +99,7 @@ const logoutUser = asyncHandler(async (req, res) => {
 // @desc    Get user profile
 // @route   Get /api/users/profile
 // @access  Private
-const getUserProfile = asyncHandler(async (req: IGetUserAuthInfoRequest, res: Response) => {
+const getUserProfile = asyncHandler(async (req: Request, res: Response) => {
     const user = await prisma.user.findUnique({
         where: {
             id: req.user!.id
@@ -107,7 +121,7 @@ const getUserProfile = asyncHandler(async (req: IGetUserAuthInfoRequest, res: Re
 // @desc    Update user profile
 // @route   Get /api/users/profile
 // @access  Private
-const updateUserProfile = asyncHandler(async (req: IGetUserAuthInfoRequest, res: Response) => {
+const updateUserProfile = asyncHandler(async (req: Request, res: Response) => {
       const user = await prisma.user.findUnique({
             where: {
                 id: req.user!.id

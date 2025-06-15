@@ -1,7 +1,6 @@
 import { Request, Response } from "express";
 import asyncHandler from "../middleware/asyncHanlder";
 import { PrismaClient } from '@prisma/client';
-import bcrypt from "bcryptjs";
 
 
 const prisma = new PrismaClient();
@@ -85,14 +84,39 @@ const getMyOrders = asyncHandler(async (req: CustomRequest, res: Response) => {
 // @route   GET /api/orders/:id
 // @access  Private
 const getOrderById = asyncHandler(async (req: CustomRequest, res: Response) => {
-  // const order = await prisma.order.findMany();
+  const { id } = req.params;
+
+  if(!id) {
+    res.status(400).send("Order ID is required in the request.");
+  }
+
+  const parsedId = parseInt(id, 10);
+
+  if (isNaN(parsedId)) {
+    res.status(400).send("Order ID must be a valid number.");
+  }
   
-  // if (order) {
-  //   res.status(200).json(order);
-  // } else {
-  //   res.status(404);
-  //   return;
-  // }
+  const order = await prisma.order.findUnique({ 
+    where: { id: parsedId },
+    include: {
+      orderItems: true,
+      shippingAddress: true
+    }
+   });
+
+   
+   if (!order) {
+     res.status(404).send("Order not found.");
+    }
+    
+    const user = req.user;
+    
+   if (!user) {
+     res.status(404).send("User not found.");
+    }
+
+
+  res.status(200).json({order, user});
 });
 
 // @desc    Update order to paid

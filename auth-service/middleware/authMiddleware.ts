@@ -1,70 +1,68 @@
 import { Request, Response, NextFunction } from "express";
-import jwt, { decode } from "jsonwebtoken";
+import jwt from "jsonwebtoken";
 import asyncHandler from "./asyncHanlder";
-import { PrismaClient, User, Prisma } from '@prisma/client';
+import { PrismaClient, Prisma } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
-interface AuthenticatedRequest extends Request {
-    user?: User;
-  } 
+type SafeUser = Prisma.UserGetPayload<{
+  select: {
+    id: true;
+    name: true;
+    email: true;
+    isAdmin: true;
+    createdAt: true;
+  };
+}>;
 
-// type SafeUser = Prisma.UserGetPayload<{
-//   select: {
-//     id: true;
-//     name: true;
-//     email: true;
-//     password?: true
-//     isAdmin: true;
-//   };
-// }>;
+declare global {
+  namespace Express {
+    interface Request {
+      user?: SafeUser;
+    }
+  }
+}
 
 //protect routes
 export const protect = asyncHandler(
-    async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
-      let token: string | undefined;
-  
-      token = req.cookies?.jwt;
-  
-      if (token) {
-        try {
-          const decoded = jwt.verify(token, process.env.JWT_SECRET as string) as { userId: number };
-          const user: User | null = await prisma.user.findUnique({where: {id: decoded.userId},
-            select: {
-              id: true,
-              name: true,
-              email: true,
-              password: true, //!THIS SHOULD BE REMOVED IN THE FURTURE
-              isAdmin: true,
-              createdAt: true
-            }});
-            
-            if (!user) {
-              res.status(401);
-              throw new Error("User not found");
-            }
-            
-          (req as AuthenticatedRequest).user = user;  
-          next();
-        } catch (err) {
-          console.log(err);
-          
-          // res.status(401);
-          // throw new Error("Token Failed!");
-        }
-      } else {
-        console.log("Unauthorized");
-        
-        // log
-        // res.status(401);
-        // throw new Error("Unauthorized!");
-      }
+  async (req: Request, res: Response, next: NextFunction) => {
+    const token = req.cookies?.jwt;
+
+    if (!token) {
+      console.log("Unauthorized: no token");
+       res.status(401).json({ message: "Unauthorized: no token" });
     }
-  );
+
+    try {
+      const decoded = jwt.verify(token, process.env.JWT_SECRET as string) as { userId: number };
+      const user = await prisma.user.findUnique({
+        where: { id: decoded.userId },
+        select: {
+          id: true,
+          name: true,
+          email: true,
+          isAdmin: true,
+          createdAt: true,
+        },
+      });
+
+      if (!user) {
+         res.status(401).json({ message: "User not found" });
+      }
+
+      req.user = user as SafeUser;
+      next();
+    } catch (error) {
+      console.error("Token verification failed:", error);
+       res.status(401).json({ message: "Token failed or invalid" });
+    }
+  }
+);
+
 
 // Admin middleware 
 export const admin = (
-    req: AuthenticatedRequest,
+    req: Request,
     res: Response,
     next: NextFunction
   ) => {

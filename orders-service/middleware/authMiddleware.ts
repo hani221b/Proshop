@@ -29,7 +29,7 @@ export const protect = asyncHandler(
         try {
           
           const decoded = jwt.verify(token, process.env.JWT_SECRET as string) as { userId: string };
-          await axios.get(`${process.env.AUTH_SERVICE_URL}/${decoded.userId}`, {
+          await axios.get(`${process.env.NGINX_URL}/api/users/${decoded.userId}`, {
             headers: { 
               Cookie: `jwt=${token}`
             }

@@ -45,8 +45,8 @@ interface PayPalClientId {
 
 const OrderScreen: React.FC = () => {
   const { id: orderId} = useParams<{ id: string }>();
-  const { data: order, refetch, isLoading, error } = useGetOrderDetailsQuery(orderId);
-
+  const { data: {order, user} = {}, refetch, isLoading, error } = useGetOrderDetailsQuery(orderId);
+    
   const [payOrder, {isLoading: loadingPay}] = usePayOrderMutation();
 
   const [{isPending}, paypalDispatch] = usePayPalScriptReducer();
@@ -121,10 +121,10 @@ const OrderScreen: React.FC = () => {
               <ListGroup.Item>
                  <h2>Shipping</h2>
                  <p>
-                  <strong>Name: </strong> { order.user.name } 
+                  <strong>Name: </strong> { user.name } 
                  </p>
                  <p>
-                  <strong>Email: </strong> {order.user.email}
+                  <strong>Email: </strong> { user.email}
                  </p>
                  <p>
                   <strong>Address: </strong>
