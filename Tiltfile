@@ -32,6 +32,13 @@ k8s_yaml([
     "k8s/products-db/secret.yml",
     "k8s/products-db/service.yml",
 
+    "k8s/nginx/configmap.yml",
+    "k8s/nginx/deployment.yml", 
+    "k8s/nginx/service.yml",
+
+    "k8s/adminer/deployment.yml", 
+    "k8s/adminer/service.yml",
+
     "k8s/ingress.yml",
 ])
 
@@ -73,7 +80,10 @@ k8s_resource("auth-service", port_forwards=8001)
 k8s_resource("orders-service", port_forwards=8002)
 k8s_resource("products-service", port_forwards=8003)
 k8s_resource("frontend", port_forwards=3000)
+k8s_resource("nginx", port_forwards="8080:80")
+k8s_resource("adminer", port_forwards=8080)
 
 k8s_resource("orders-service", resource_deps=["orders-db"])
 k8s_resource("auth-service", resource_deps=["auth-db"])
 k8s_resource("products-service", resource_deps=["products-db"])
+k8s_resource("nginx", resource_deps=["auth-service", "orders-service"])

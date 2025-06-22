@@ -15,7 +15,7 @@ app.use(cors({
     origin: ['http://localhost:3000', 'http://proshop.local'],
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization', 'Cookie'],
+    allowedHeaders: ['Content-Type', 'Authorization', 'Cookie', 'Access-Control-Allow-Origin'],
     exposedHeaders: ['Set-Cookie'] 
   }));
 
