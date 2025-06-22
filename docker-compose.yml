@@ -81,6 +81,34 @@ services:
       - orders-db
     networks:
       - app-network
+  
+  payment-service:
+    build: ./payment-service
+    restart: on-failure
+    ports:
+    - "5003:5003"
+    expose:
+      - "5003"
+    volumes:
+      - ./payment-service:/app
+      - /app/node_modules
+    env_file:
+      - ./payment-service/.env
+    depends_on:
+      - payment-db
+    networks:
+      - app-network
+
+    payment-db:
+      image: postgres:15
+      container_name: payment-db
+      restart: always
+      env_file:
+        - ./payment-service/.db.env
+      volumes:
+        - payment-db-data:/var/lib/postgresql/data
+      networks:
+        - app-network
 
   frontend:
     build: ./frontend
