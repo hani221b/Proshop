@@ -1,6 +1,6 @@
 import React from 'react'
 import {Link, useParams} from "react-router-dom";
-import {Row, Col, ListGroup, Image, Card} from "react-bootstrap";
+import {Row, Col, ListGroup, Image, Card, Button} from "react-bootstrap";
 import Message from "../components/Message";
 import Loader from "../components/Loader";
 import { useGetOrderDetailsQuery,
@@ -170,7 +170,7 @@ const OrderScreen: React.FC = () => {
                         </Link>
                       </Col>
                       <Col md={4}>
-                        {item.qty} x ${item.itemPrice} = ${item.qty * item.itemPrice}
+                        {item.qty} x ${order.itemPrice} = ${item.qty * order.itemPrice}
                       </Col>
                     </Row>
                   </ListGroup.Item>
@@ -209,9 +209,9 @@ const OrderScreen: React.FC = () => {
                 {!order.isPaid && (
                   <ListGroup.Item>
                     {loadingPay && <Loader />}
-                    {isPending ? <Loader /> : (
+                    <Button onClick={onApproveTest} style={{marginBottom: "10px"}}> Pay Now</Button>
+                    {/* {isPending ? <Loader /> : (
                       <div>
-                        {/* <Button onClick={onApproveTest} style={{marginBottom: "10px"}}> Test Pay Order</Button> */}
                         <div>
                           <PayPalButtons
                             createOrder={createOrder}
@@ -220,7 +220,7 @@ const OrderScreen: React.FC = () => {
                           ></PayPalButtons>
                         </div>
                       </div>
-                    )}
+                    )} */}
                   </ListGroup.Item>
                 )}
               </ListGroup>
