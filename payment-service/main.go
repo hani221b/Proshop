@@ -12,7 +12,7 @@ func main() {
 	stripe.InitStripe()
 
 	http.HandleFunc("/checkout", handlers.HandleCheckout)
-	http.HandleFunc("/pay", handlers.HandlePayment) 
+	// http.HandleFunc("/pay", handlers.HandlePayment) 
 	http.HandleFunc("/success", func(w http.ResponseWriter, r *http.Request) {
 		w.Write([]byte("✅ Payment successful!"))
 	})
