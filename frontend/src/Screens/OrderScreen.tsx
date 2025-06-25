@@ -4,7 +4,7 @@ import {Row, Col, ListGroup, Image, Card, Button} from "react-bootstrap";
 import Message from "../components/Message";
 import Loader from "../components/Loader";
 import { useGetOrderDetailsQuery,
-   usePayOrderMutation,
+   useRedirectToCheckoutMutation,
    useGetPayPalClientIdQuery  } from '../slices/orderApiSlice.ts';
 import { PayPalButtons, usePayPalScriptReducer, DISPATCH_ACTION, SCRIPT_LOADING_STATE } from "@paypal/react-paypal-js";
 import {toast} from "react-toastify";
@@ -47,7 +47,8 @@ const OrderScreen: React.FC = () => {
   const { id: orderId} = useParams<{ id: string }>();
   const { data: {order, user} = {}, refetch, isLoading, error } = useGetOrderDetailsQuery(orderId);
     
-  const [payOrder, {isLoading: loadingPay}] = usePayOrderMutation();
+  // const [payOrder, {isLoading: loadingPay}] = usePayOrderMutation();
+  const [redirectToCheckout, {isLoading: loadingRedirctToCheckout}] = useRedirectToCheckoutMutation();
 
   const [{isPending}, paypalDispatch] = usePayPalScriptReducer();
 
@@ -76,22 +77,22 @@ const OrderScreen: React.FC = () => {
     }
   }, [order, paypal, paypalDispatch, loadingPayPal, errorPayPal]);
 
-  async function onApprove(_: any, actions: any){
-    return actions.order.capture().then(async function (details: any){
-      try {
-        await payOrder({orderId, details});
-        refetch();         
-        toast.success("Payment Successful");
-      }catch(err){
-        toast.error("Somethin went wrong");
-      }
-    });
-  }
+  // async function onApprove(_: any, actions: any){
+  //   return actions.order.capture().then(async function (details: any){
+  //     try {
+  //       await payOrder({orderId, details});
+  //       refetch();         
+  //       toast.success("Payment Successful");
+  //     }catch(err){
+  //       toast.error("Somethin went wrong");
+  //     }
+  //   });
+  // }
 
   async function onApproveTest(){
-       await payOrder({orderId, details: {payer: {}}});
-        refetch();         
-        toast.success("Payment Successful");
+       await redirectToCheckout({orderId, details: {payer: {}}});
+        // refetch();         
+        // toast.success("Payment Successful");
   }
 
   function onError(err: any){
@@ -208,7 +209,7 @@ const OrderScreen: React.FC = () => {
                 </ListGroup.Item>
                 {!order.isPaid && (
                   <ListGroup.Item>
-                    {loadingPay && <Loader />}
+                    {loadingRedirctToCheckout && <Loader />}
                     <Button onClick={onApproveTest} style={{marginBottom: "10px"}}> Pay Now</Button>
                     {/* {isPending ? <Loader /> : (
                       <div>

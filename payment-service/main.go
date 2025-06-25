@@ -4,22 +4,17 @@ import (
 	"log"
 	"net/http"
 
-	"example.com/payment-service/handlers"
-	"example.com/payment-service/stripe"
+	"proshop.local/payment-service/stripe"
+	"proshop.local/payment-service/middleware"
+	"proshop.local/payment-service/routes"
 )
 
 func main() {
 	stripe.InitStripe()
 
-	http.HandleFunc("/checkout", handlers.HandleCheckout)
-	// http.HandleFunc("/pay", handlers.HandlePayment) 
-	http.HandleFunc("/success", func(w http.ResponseWriter, r *http.Request) {
-		w.Write([]byte("✅ Payment successful!"))
-	})
-	http.HandleFunc("/cancel", func(w http.ResponseWriter, r *http.Request) {
-		w.Write([]byte("❌ Payment cancelled."))
-	})
+	mux := http.NewServeMux()
+	mux.Handle("/api/payment/", middleware.CorsMiddleware(routes.PaymentRouter()))
 
 	log.Println("Server running on http://localhost:5004")
-	log.Fatal(http.ListenAndServe(":5004", nil))
+	log.Fatal(http.ListenAndServe(":5004", mux))
 }

@@ -93,21 +93,21 @@ services:
       - ./payment-service:/app
     env_file:
       - ./payment-service/.env
-    depends_on:
-      - payment-db
+    # depends_on:
+    #   - payment-db
     networks:
       - app-network
 
-  payment-db:
-    image: postgres:15
-    container_name: payment-db
-    restart: always
-    env_file:
-      - ./payment-service/.db.env
-    volumes:
-      - payment-db-data:/var/lib/postgresql/data
-    networks:
-      - app-network
+  # payment-db:
+  #   image: postgres:15
+  #   container_name: payment-db
+  #   restart: always
+  #   env_file:
+  #     - ./payment-service/.db.env
+  #   volumes:
+  #     - payment-db-data:/var/lib/postgresql/data
+  #   networks:
+  #     - app-network
 
   frontend:
     build: ./frontend

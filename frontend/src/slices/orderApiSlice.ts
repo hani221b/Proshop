@@ -1,5 +1,5 @@
 import { apiSlice } from "./apiSlice.ts";
-import { ORDERS_URL, PAYPAL_URL } from "../constants.ts";
+import { ORDERS_URL, PAYPAL_URL, PAYMENT_URL } from "../constants.ts";
 
 export const orderApiSlice = apiSlice.injectEndpoints({
     endpoints: (builder) => ({
@@ -25,6 +25,14 @@ export const orderApiSlice = apiSlice.injectEndpoints({
               credentials: 'include'
             }) 
           }),
+          redirectToCheckout: builder.mutation({
+            query: ({orderId, details}) => ({
+              url: `${PAYMENT_URL}/checkout`,
+              method: "GET",
+              // body: {...details},
+              credentials: 'include'
+            }) 
+          }),
           getPayPalClientId: builder.query({
             query: () => ({
               url: PAYPAL_URL,
@@ -41,6 +49,6 @@ export const orderApiSlice = apiSlice.injectEndpoints({
     })
 });
 
-export const { useCreateOrderMutation, useGetOrderDetailsQuery,
+export const { useCreateOrderMutation, useGetOrderDetailsQuery, useRedirectToCheckoutMutation,
               usePayOrderMutation, useGetPayPalClientIdQuery, useGetMyOrdersQuery} 
         = orderApiSlice;

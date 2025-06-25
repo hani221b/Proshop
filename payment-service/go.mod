@@ -1,4 +1,4 @@
-module example.com/payment-service
+module proshop.local/payment-service
 
 go 1.22
 
