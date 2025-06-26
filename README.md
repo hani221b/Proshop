@@ -31,10 +31,9 @@
 
 Before you begin, ensure you have the following installed:
 
--   Node.js (v16 or higher)
--   MongoDB (local or cloud instance, e.g., MongoDB Atlas)
--   npm or Yarn
 -   Git
+-   Docker
+-   Docker Compose
 
 ## Installation
 
