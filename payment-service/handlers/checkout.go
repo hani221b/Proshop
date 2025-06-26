@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"encoding/json"
 	"net/http"
 
 	"github.com/stripe/stripe-go/v78"
@@ -26,11 +27,15 @@ func HandleCheckout(w http.ResponseWriter, r *http.Request) {
 		},
 	}
 
-	s, err := session.New(params)
+	session, err := session.New(params)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 
-	http.Redirect(w, r, s.URL, http.StatusSeeOther)
+	// http.Redirect(w, r, s.URL, http.StatusSeeOther)
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(map[string]string{
+		"url": session.URL,
+	})
 }

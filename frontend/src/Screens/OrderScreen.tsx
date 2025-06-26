@@ -4,7 +4,7 @@ import {Row, Col, ListGroup, Image, Card, Button} from "react-bootstrap";
 import Message from "../components/Message";
 import Loader from "../components/Loader";
 import { useGetOrderDetailsQuery,
-   useRedirectToCheckoutMutation,
+   useLazyRedirectToCheckoutQuery,
    useGetPayPalClientIdQuery  } from '../slices/orderApiSlice.ts';
 import { PayPalButtons, usePayPalScriptReducer, DISPATCH_ACTION, SCRIPT_LOADING_STATE } from "@paypal/react-paypal-js";
 import {toast} from "react-toastify";
@@ -48,7 +48,7 @@ const OrderScreen: React.FC = () => {
   const { data: {order, user} = {}, refetch, isLoading, error } = useGetOrderDetailsQuery(orderId);
     
   // const [payOrder, {isLoading: loadingPay}] = usePayOrderMutation();
-  const [redirectToCheckout, {isLoading: loadingRedirctToCheckout}] = useRedirectToCheckoutMutation();
+  const [redirectToCheckout, {isLoading: loadingRedirctToCheckout}] = useLazyRedirectToCheckoutQuery();
 
   const [{isPending}, paypalDispatch] = usePayPalScriptReducer();
 
@@ -88,6 +88,22 @@ const OrderScreen: React.FC = () => {
   //     }
   //   });
   // }
+
+  const [triggerCheckout, { isFetching }] = useLazyRedirectToCheckoutQuery();
+
+  const handleClick = async () => {
+      try {
+        const result = await triggerCheckout({ orderId }).unwrap();
+
+        if (result?.url) {
+          window.location.href = result.url;
+        } else {
+          console.error("No checkout URL received");
+        }
+      } catch (err) {
+        console.error("Failed to create Stripe Checkout session", err);
+      }
+  };
 
   async function onApproveTest(){
        await redirectToCheckout({orderId, details: {payer: {}}});
@@ -210,7 +226,10 @@ const OrderScreen: React.FC = () => {
                 {!order.isPaid && (
                   <ListGroup.Item>
                     {loadingRedirctToCheckout && <Loader />}
-                    <Button onClick={onApproveTest} style={{marginBottom: "10px"}}> Pay Now</Button>
+                  <Button onClick={handleClick} disabled={isFetching} style={{marginBottom: "10px"}}>
+                      {isFetching ? "Redirecting..." : "Pay Now"}
+                    </Button>
+                    {/* <Button onClick={onApproveTest} > Pay Now</Button> */}
                     {/* {isPending ? <Loader /> : (
                       <div>
                         <div>

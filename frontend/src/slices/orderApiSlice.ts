@@ -25,7 +25,7 @@ export const orderApiSlice = apiSlice.injectEndpoints({
               credentials: 'include'
             }) 
           }),
-          redirectToCheckout: builder.mutation({
+          redirectToCheckout: builder.query({
             query: ({orderId, details}) => ({
               url: `${PAYMENT_URL}/checkout`,
               method: "GET",
@@ -49,6 +49,6 @@ export const orderApiSlice = apiSlice.injectEndpoints({
     })
 });
 
-export const { useCreateOrderMutation, useGetOrderDetailsQuery, useRedirectToCheckoutMutation,
+export const { useCreateOrderMutation, useGetOrderDetailsQuery, useLazyRedirectToCheckoutQuery,
               usePayOrderMutation, useGetPayPalClientIdQuery, useGetMyOrdersQuery} 
         = orderApiSlice;
