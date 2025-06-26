@@ -1,44 +1,39 @@
 # ProShop - eCommerce Platform
 
-1.  ProShop is a full-featured eCommerce platform built with the MERN stack (MongoDB, Express.js, React, Node.js) and Redux for state management. This project provides a robust online shopping experience, allowing users to browse products, add items to a cart, manage user accounts, and process payments. It includes an admin panel for managing products, orders, and users.
+1.  ProShop is a full-featured eCommerce platform built with Node.js, Typescript, Golang, and React, with Redux for state management using Microservices architecture. This project provides a robust online shopping experience, allowing users to browse products, add items to a cart, manage user accounts, and process payments.
 
 ## Features
 
 -   **Product Catalog**: Browse and search for products with details like price, description, and ratings.
 -   **Shopping Cart**: Add, update, or remove items in the cart with real-time updates.
 -   **User Authentication**: Secure user login and registration using JWT (JSON Web Tokens) and HTTP-only cookies.
--   **Admin Panel**: Manage products, orders, and user accounts (restricted to admin users).
 -   **Product Reviews**: Users can leave reviews and ratings for products.
--   **Payment Integration**: Supports secure payments (e.g., PayPal or other gateways, if implemented).
+-   **Payment Integration**: Supports secure payments (e.g., Credit Card).
 -   **Responsive Design**: Frontend built with React and Bootstrap for a mobile-friendly experience.
 -   **State Management**: Uses Redux Toolkit for efficient global state management.
 
 ## Tech Stack
 
--   **Frontend**:
-    -   React.js: UI library for building the user interface.
-    -   Redux Toolkit: State management for predictable state updates.
-    -   React-Bootstrap: Styling components for a consistent, responsive design.
-    -   Axios: HTTP client for API requests.
--   **Backend**:
-    -   Node.js: JavaScript runtime for server-side logic.
-    -   Express.js: Web framework for building RESTful APIs.
-    -   MongoDB: NoSQL database for storing product, user, and order data.
-    -   Mongoose: ODM for MongoDB data modeling.
--   **Authentication**: JSON Web Tokens (JWT) with HTTP-only cookies.
--   **Other Tools**:
-    -   bcryptjs: Password hashing.
-    -   Multer: File uploads for product images.
-    -   dotenv: Environment variable management.
+-   **Node.js**:
+-   **Typescript**:
+-   **Golang**:
+-   **React**:
+-   **Redux**:
+-   **PostgreSQL**:
+-   **Stripe**:
+-   **Docker**:
+-   **Kubernetes**:
+-   **Nginx**:
+-   **Prometheus**:
+-   **Grafana**:
 
 ## Prerequisites
 
 Before you begin, ensure you have the following installed:
 
--   Node.js (v16 or higher)
--   MongoDB (local or cloud instance, e.g., MongoDB Atlas)
--   npm or Yarn
 -   Git
+-   Docker
+-   Docker Compose
 
 ## Installation
 
