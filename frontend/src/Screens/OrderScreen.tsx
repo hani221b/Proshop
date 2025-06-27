@@ -93,8 +93,7 @@ const OrderScreen: React.FC = () => {
 
   const handleClick = async () => {
       try {
-        const result = await triggerCheckout({ orderId }).unwrap();
-
+        const result = await triggerCheckout({ orderId, order}).unwrap();
         if (result?.url) {
           window.location.href = result.url;
         } else {
@@ -105,11 +104,6 @@ const OrderScreen: React.FC = () => {
       }
   };
 
-  async function onApproveTest(){
-       await redirectToCheckout({orderId, details: {payer: {}}});
-        // refetch();         
-        // toast.success("Payment Successful");
-  }
 
   function onError(err: any){
     toast.error(err?.data?.message || err.message);
@@ -187,7 +181,8 @@ const OrderScreen: React.FC = () => {
                         </Link>
                       </Col>
                       <Col md={4}>
-                        {item.qty} x ${order.itemPrice} = ${item.qty * order.itemPrice}
+                        {item.qty} x ${order.itemPrice + order.shippingPrice + order.taxPrice}
+                          = ${item.qty * order.itemPrice + order.taxPrice + order.shippingPrice}
                       </Col>
                     </Row>
                   </ListGroup.Item>

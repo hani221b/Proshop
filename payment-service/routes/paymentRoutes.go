@@ -14,7 +14,7 @@ func PaymentRouter() http.Handler {
 		r.URL.Path = path
 
 		switch {
-		case path == "/checkout" && r.Method == "GET":
+		case path == "/checkout" && r.Method == "POST":
 			handlers.HandleCheckout(w, r)
 		case path == "/success" && r.Method == "GET":
 			w.Write([]byte("✅ Payment successful!"))

@@ -25,14 +25,22 @@ export const orderApiSlice = apiSlice.injectEndpoints({
               credentials: 'include'
             }) 
           }),
-          redirectToCheckout: builder.query({
-            query: ({orderId, details}) => ({
+        redirectToCheckout: builder.query({
+          query: ({ orderId, order }) => {
+            return {
               url: `${PAYMENT_URL}/checkout`,
-              method: "GET",
-              // body: {...details},
+              method: "POST",
+              body: {
+                orderId,
+                order
+              },
+              headers: {
+                "Content-Type": "application/json"
+              },
               credentials: 'include'
-            }) 
-          }),
+            };
+          }
+        }),
           getPayPalClientId: builder.query({
             query: () => ({
               url: PAYPAL_URL,
