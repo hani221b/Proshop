@@ -62,6 +62,7 @@ const createdOrder = await prisma.order.create({
         qty: item.qty,
         image: item.image,
         productId: item.id, 
+        price: item.price,   
       })),
     }
     },

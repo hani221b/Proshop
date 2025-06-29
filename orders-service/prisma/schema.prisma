@@ -43,6 +43,7 @@ model OrderItem {
   qty       Int
   image     String
   productId Int
+  price     Float
 }
 
 model ShippingAddress {

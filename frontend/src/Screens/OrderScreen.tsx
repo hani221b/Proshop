@@ -181,8 +181,8 @@ const OrderScreen: React.FC = () => {
                         </Link>
                       </Col>
                       <Col md={4}>
-                        {item.qty} x ${order.itemPrice + order.shippingPrice + order.taxPrice}
-                          = ${item.qty * order.itemPrice + order.taxPrice + order.shippingPrice}
+                        {item.qty} x ${item.price}
+                          = ${item.qty * item.price}
                       </Col>
                     </Row>
                   </ListGroup.Item>
@@ -200,7 +200,7 @@ const OrderScreen: React.FC = () => {
                 <ListGroup.Item>
                   <Row>
                     <Col>Items</Col>
-                    <Col>${order.itemPrice}</Col>
+                  <Col>${order.orderItems.reduce((total: number, item: CartItem) => total + (item.price * item.qty) , 0)}</Col>
                   </Row>
 
                   <Row>
@@ -215,7 +215,11 @@ const OrderScreen: React.FC = () => {
 
                   <Row>
                     <Col>Total</Col>
-                    <Col>${order.totalPrice}</Col>
+                    <Col>${
+                      (order.orderItems.reduce((total: number, item: CartItem) => total + (item.price * item.qty) , 0)
+                      + order.shippingPrice
+                      + order.taxPrice).toFixed(2)
+                      }</Col>
                   </Row>
                 </ListGroup.Item>
                 {!order.isPaid && (

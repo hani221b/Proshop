@@ -27,6 +27,7 @@ CREATE TABLE "OrderItem" (
     "qty" INTEGER NOT NULL,
     "image" TEXT NOT NULL,
     "productId" TEXT NOT NULL,
+    "price" FLOAT NOT NULL,
 
     CONSTRAINT "OrderItem_pkey" PRIMARY KEY ("id")
 );
