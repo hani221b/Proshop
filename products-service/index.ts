@@ -4,6 +4,7 @@ dotenv.config();
 import productsRoutes from "./routes/productsRoutes";
 import { notFound, errorHandler } from "./middleware/errorMiddleware";
 import { metricsHandler } from "./controllers/metricsController";
+import { metrics } from "./middleware/metricsMiddleware";
 import bodyParser from "body-parser";
 import cookieParser from "cookie-parser";
 import cors from "cors";
@@ -17,6 +18,7 @@ app.use(cors({
     credentials: true
   }));
 
+app.use(metrics);
 //cookie parser middleware
 app.use(cookieParser());
 
