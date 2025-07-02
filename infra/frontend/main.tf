@@ -62,3 +62,83 @@ resource "aws_ecs_task_definition" "frontend" {
     }
   ])
 }
+
+resource "aws_iam_role" "ecs_task_execution_role" {
+  name = "ecsTaskExecutionRole"
+
+  assume_role_policy = jsonencode({
+    Version = "2012-10-17",
+    Statement = [{
+      Effect = "Allow",
+      Principal = {
+        Service = "ecs-tasks.amazonaws.com"
+      },
+      Action = "sts:AssumeRole"
+    }]
+  })
+}
+
+resource "aws_iam_role_policy_attachment" "ecs_execution_policy" {
+    role = aws_iam_role.ecs_task_execution_role.name
+    policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy"
+}
+
+resource "aws_lb" "frontend-alb" {
+    name = "frontend-alb"
+    internal = false
+    load_balancer_type = "application"
+    security_groups = [aws_security_group.frontend_sg]
+    subnets = module.vpc.public_subnets
+}
+
+resource "aws_lb_target_group" "frontend_tg" {
+  name = "frontend-tg"
+  port = 80
+  protocol = "HTTP"
+  vpc_id = module.vpc.vpc_id
+
+
+  health_check {
+    path                = "/"
+    protocol            = "HTTP"
+    matcher             = "200"
+    interval            = 30
+    timeout             = 5
+    healthy_threshold   = 2
+    unhealthy_threshold = 2
+  }
+}
+
+resource "aws_lb_listener" "frontend_listener" {
+  load_balancer_arn = aws_lb.frontend_alb.arn
+  port              = "80"
+  protocol          = "HTTP"
+
+  default_action {
+    type             = "forward"
+    target_group_arn = aws_lb_target_group.frontend_tg.arn
+  }
+}
+
+resource "aws_ecs_service" "frontend_service" {
+  name = "frontend-service"
+  cluster = aws_ecs_cluster.frontend_cluster.id
+  task_definition = aws_ecs_task_definition.frontend
+  launch_type = "FARGATE"
+  desired_count = 1
+
+  network_configuration {
+    subnets = module.vpc.public_subnets
+    security_groups = [aws_security_group.frontend_sg.id]
+    assign_public_ip = true
+  }
+
+  load_balancer {
+    target_group_arn = aws_lb_target_group.frontend_tg.arn
+    container_name = "frontend"
+    container_port = 80
+  }
+
+  depends_on = [aws_lb_listener.frontend_listener]
+
+}
