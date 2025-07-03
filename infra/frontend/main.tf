@@ -4,7 +4,7 @@ provider "aws" {
 
 module "vpc" {
     source = "terraform-aws-modules/vpc/aws"
-    version = "4.0.2"
+    version = "5.1.1"
     name = "frontend-vpc"
     cidr = "10.0.0.0/16"
 
@@ -46,14 +46,14 @@ resource "aws_ecs_task_definition" "frontend" {
   cpu = "256"
   memory = "512"
   network_mode = "awsvpc"
-  execution_role_arn = aws_iam_role.aws_ecs_task_definition.arb
+  execution_role_arn = aws_iam_role.ecs_task_execution_role.arn
 
-  container_definitions = jsondecode([
+  container_definitions = jsonencode([
     {
-        name  = "frontend"
-        image = var.image_url
-        essential = true
-              portMappings = [
+      name      = "frontend"
+      image     = var.image_url
+      essential = true
+      portMappings = [
         {
           containerPort = 80
           hostPort      = 80
@@ -83,11 +83,11 @@ resource "aws_iam_role_policy_attachment" "ecs_execution_policy" {
     policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy"
 }
 
-resource "aws_lb" "frontend-alb" {
+resource "aws_lb" "frontend_alb" {
     name = "frontend-alb"
     internal = false
     load_balancer_type = "application"
-    security_groups = [aws_security_group.frontend_sg]
+    security_groups = [aws_security_group.frontend_sg.id]
     subnets = module.vpc.public_subnets
 }
 
